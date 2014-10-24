@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>FlySmash</title>
+
+    <!-- FlySmash references -->
+    <link href="css/index.css" rel="stylesheet" />
+    <link href="css/game.css" rel="stylesheet" />
+
+</head>
+<body class="background">
+    <div id="timer">
+        :45
+    </div>
+    <div id="scoreContainer">
+        Score: <div id="scoreCounter">0</div>
+    </div>
+
+    <!-- Cordova reference, this is added to your app when it's built. -->
+    <script src="cordova.js"></script>
+    <!--<script src="scripts/platformOverrides.js"></script>-->
+
+    <script src="js/index.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/fly.js"></script>
+
+    <script>
+        function deviceReady() {
+            Game.start();
+        }
+        document.addEventListener("deviceready", deviceReady, false);
+    </script>
+
+</body>
+</html>

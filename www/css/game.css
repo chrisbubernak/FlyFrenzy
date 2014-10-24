@@ -1,0 +1,10 @@
+﻿.fly {
+  position: absolute;
+  background-image: url(../img/fly.png);
+  background-size: cover;
+}
+
+.background {
+  background: no-repeat;
+  background-image: url(../img/background.jpg);
+}

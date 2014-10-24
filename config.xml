@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.bubernak.flyfrenzy" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>FlyFrenzy</name>
+    <description>
+        So many flys. So little time.
+    </description>
+    <author email="dev@cordova.apache.org" href="http://cordova.io">
+        Apache Cordova Team
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+  
+    <!-- Default application icon -->
+    <icon src="www/img/fly.png" />
+    <!--
+        Default icon should work, but cordova don't overwrite
+        the default on all densities
+    -->
+    <icon src="www/img/fly.png" platform="android" density="ldpi" />
+    <icon src="www/img/fly.png" platform="android" density="mdpi" />
+    <icon src="www/img/fly.png" platform="android" density="hdpi" />
+    <icon src="www/img/fly.png" platform="android" density="xhdpi" />
+</widget>
+
