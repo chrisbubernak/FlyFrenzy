@@ -37,4 +37,3 @@ var Game = (function () {
     Game.numOfFlies = 20;
     return Game;
 })();
-//# sourceMappingURL=game.js.map

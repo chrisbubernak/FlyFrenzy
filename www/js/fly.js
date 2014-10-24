@@ -4,11 +4,11 @@ var Fly = (function () {
         this.width = Game.maxLeft / 10;
         this.height = this.width;
         this.totalHealth = 4;
-        this.moveSpeed = Math.round(Math.random() * 7 + 3);
+        this.moveSpeed = Game.maxLeft / Math.round(30 - Math.random() * 7);
         var maxLeft = Game.maxLeft - this.width;
         var maxTop = Game.maxTop - this.height;
-        var x = Math.min(Math.max(0, ((Math.random() - .5) * maxLeft)), maxLeft);
-        var y = Math.min(Math.max(0, ((Math.random() - .5) * maxTop)), maxTop);
+        var x = Math.min(Math.max(0, (Math.random() * maxLeft)), maxLeft);
+        var y = Math.min(Math.max(0, (Math.random() * maxTop)), maxTop);
         this.healthRemaining = this.totalHealth;
 
         this.div = this.createFlyDiv(x, y);
@@ -58,10 +58,10 @@ var Fly = (function () {
         div.onclick = function () {
             that.healthRemaining--;
             Game.score();
+            navigator.vibrate(50);
         };
         document.body.appendChild(div);
         return div;
     };
     return Fly;
 })();
-//# sourceMappingURL=fly.js.map
