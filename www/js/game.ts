@@ -3,18 +3,31 @@
 class Game {
     static maxLeft: number = window.innerWidth;
     static maxTop: number = window.innerHeight;
-    static scoreCounter: number = 0;
+    private static scoreCounter: number = 0;
+    private static timeCounter: number = 45;
+    private static gameLoopCounter: number = 0;
     private static fps: number = 20;
     private static flies: Fly[] = [];
     private static numOfFlies: number = 20;
+    private static scoreDiv: HTMLElement = document.getElementById("scoreCounter");
+    private static timeDiv: HTMLElement = document.getElementById("timeCounter");
 
     public static score() {
         Game.scoreCounter++;
         Game.updateScore();
     }
 
+    public static secondElapse() {
+        Game.timeCounter--;
+        Game.updateTime();
+    }
+
     private static updateScore() {
-        document.getElementById("scoreCounter").innerHTML = Game.scoreCounter.toString();
+        Game.scoreDiv.innerHTML = Game.scoreCounter.toString();
+    }
+
+    private static updateTime() {
+        Game.timeDiv.innerHTML = Game.timeCounter.toString();
     }
 
     public static start() {
@@ -34,5 +47,12 @@ class Game {
         }
 
         Game.updateScore();
+
+        Game.gameLoopCounter++;
+        if (Game.gameLoopCounter > Game.fps) {
+            Game.gameLoopCounter = 0;
+            Game.secondElapse();
+        }
+
     }
 }

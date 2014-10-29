@@ -7,9 +7,6 @@
         "files": {}
     },
     "installed_plugins": {
-        "org.apache.cordova.splashscreen": {
-            "PACKAGE_NAME": "com.bubernak.flysmash"
-        },
         "org.apache.cordova.vibration": {
             "PACKAGE_NAME": "com.bubernak.flysmash"
         }
