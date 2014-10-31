@@ -1,57 +1,76 @@
 ﻿/// <reference path="fly.ts"/>
+/// <reference path="state.ts"/>
+/// <reference path="app.ts"/>
 
-class Game {
-    static maxLeft: number = window.innerWidth;
-    static maxTop: number = window.innerHeight;
-    private static scoreCounter: number = 0;
-    private static timeCounter: number = 45;
-    private static gameLoopCounter: number = 0;
-    private static fps: number = 20;
-    private static flies: Fly[] = [];
-    private static numOfFlies: number = 20;
-    private static scoreDiv: HTMLElement = document.getElementById("scoreCounter");
-    private static timeDiv: HTMLElement = document.getElementById("timeCounter");
+class Game extends State{
+    public maxLeft: number = window.innerWidth;
+    public maxTop: number = window.innerHeight;
+    private scoreCounter: number = 0;
+    private timeCounter: number = 45;
+    private gameLoopCounter: number = 0;
+    private fps: number = 20;
+    private flies: Fly[] = [];
+    private numOfFlies: number = 20;
+    private scoreDiv: HTMLElement = document.getElementById("scoreCounter");
+    private timeDiv: HTMLElement = document.getElementById("timeCounter");
 
-    public static score() {
-        Game.scoreCounter++;
-        Game.updateScore();
+    private static instance: Game;
+
+    public static Instance(): Game {
+        if (typeof Game.instance === "undefined") {
+            Game.instance = new Game();
+        }
+        return Game.instance;
     }
 
-    public static secondElapse() {
-        Game.timeCounter--;
-        Game.updateTime();
-    }
-
-    private static updateScore() {
-        Game.scoreDiv.innerHTML = Game.scoreCounter.toString();
-    }
-
-    private static updateTime() {
-        Game.timeDiv.innerHTML = Game.timeCounter.toString();
-    }
-
-    public static start() {
-        for (var f = 0; f < Game.numOfFlies; f++) {
-            Game.flies.push(new Fly());
+    public static Enter(app: App) {
+        alert("Game State Entering");
+        var instance = Game.Instance();
+        for (var f = 0; f < instance.numOfFlies; f++) {
+            instance.flies.push(new Fly());
         }
 
         // Start the game loop
-        var intervalId = setInterval(Game.run, 1000 / Game.fps);
+        var intervalId = setInterval(instance.run, 1000 / instance.fps);
         // To stop the game, use the following:
         //clearInterval(Game._intervalId);
     }
 
-    private static run () {
-        for (var f = 0; f < Game.flies.length; f++) {
-            Game.flies[f].move();
+    public static Exit(app: App) {
+        alert("Game State Exiting");
+    }
+
+    public score() {
+        this.scoreCounter++;
+        this.updateScore();
+    }
+
+    public secondElapse() {
+        this.timeCounter--;
+        this.updateTime();
+    }
+
+
+    private updateScore() {
+        this.scoreDiv.innerHTML = this.scoreCounter.toString();
+    }
+
+    private updateTime() {
+        this.timeDiv.innerHTML = this.timeCounter.toString();
+    }
+
+    private run () {
+        var instance = Game.Instance();
+        for (var f = 0; f < instance.flies.length; f++) {
+            instance.flies[f].move();
         }
 
-        Game.updateScore();
+        instance.updateScore();
 
-        Game.gameLoopCounter++;
-        if (Game.gameLoopCounter > Game.fps) {
-            Game.gameLoopCounter = 0;
-            Game.secondElapse();
+        instance.gameLoopCounter++;
+        if (instance.gameLoopCounter > instance.fps) {
+            instance.gameLoopCounter = 0;
+            instance.secondElapse();
         }
 
     }

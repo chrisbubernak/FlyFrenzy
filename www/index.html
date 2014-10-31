@@ -9,27 +9,38 @@
 
 </head>
 <body>
-    <div class="background">
+    <div class="gameState">
+        <div class="background">
+        </div>
+        <div id="timeContainer">
+            Time: <div id="timeCounter">45</div>
+        </div>
+        <div id="scoreContainer">
+            Score: <div id="scoreCounter">0</div>
+        </div>
     </div>
-    <div id="timeContainer">
-        Time: <div id="timeCounter">45</div>
+    <div class="homeState">
+        <button>Start!</button>
     </div>
-    <div id="scoreContainer">
-        Score: <div id="scoreCounter">0</div>
-    </div>
+
     <!-- Cordova reference, this is added to your app when it's built. -->
-    <script src="cordova.js"></script>
+    <!--<script src="cordova.js"></script>-->
     <!--<script src="scripts/platformOverrides.js"></script>-->
 
     <script src="js/index.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/stateMachine.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/home.js"></script>
     <script src="js/game.js"></script>
     <script src="js/fly.js"></script>
 
     <script>
         function deviceReady() {
-            Game.start();
+            var app = new App();
         }
         document.addEventListener("deviceready", deviceReady, false);
+        var app = new App();
     </script>
 
 </body>

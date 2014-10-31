@@ -1,58 +1,82 @@
 ﻿/// <reference path="fly.ts"/>
-var Game = (function () {
+/// <reference path="state.ts"/>
+/// <reference path="app.ts"/>
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Game = (function (_super) {
+    __extends(Game, _super);
     function Game() {
+        _super.apply(this, arguments);
+        this.maxLeft = window.innerWidth;
+        this.maxTop = window.innerHeight;
+        this.scoreCounter = 0;
+        this.timeCounter = 45;
+        this.gameLoopCounter = 0;
+        this.fps = 20;
+        this.flies = [];
+        this.numOfFlies = 20;
+        this.scoreDiv = document.getElementById("scoreCounter");
+        this.timeDiv = document.getElementById("timeCounter");
     }
-    Game.score = function () {
-        Game.scoreCounter++;
-        Game.updateScore();
+    Game.Instance = function () {
+        if (typeof Game.instance === "undefined") {
+            Game.instance = new Game();
+        }
+        return Game.instance;
     };
 
-    Game.secondElapse = function () {
-        Game.timeCounter--;
-        Game.updateTime();
-    };
-
-    Game.updateScore = function () {
-        Game.scoreDiv.innerHTML = Game.scoreCounter.toString();
-    };
-
-    Game.updateTime = function () {
-        Game.timeDiv.innerHTML = Game.timeCounter.toString();
-    };
-
-    Game.start = function () {
-        for (var f = 0; f < Game.numOfFlies; f++) {
-            Game.flies.push(new Fly());
+    Game.Enter = function (app) {
+        alert("Game State Entering");
+        var instance = Game.Instance();
+        for (var f = 0; f < instance.numOfFlies; f++) {
+            instance.flies.push(new Fly());
         }
 
         // Start the game loop
-        var intervalId = setInterval(Game.run, 1000 / Game.fps);
+        var intervalId = setInterval(instance.run, 1000 / instance.fps);
         // To stop the game, use the following:
         //clearInterval(Game._intervalId);
     };
 
-    Game.run = function () {
-        for (var f = 0; f < Game.flies.length; f++) {
-            Game.flies[f].move();
+    Game.Exit = function (app) {
+        alert("Game State Exiting");
+    };
+
+    Game.prototype.score = function () {
+        this.scoreCounter++;
+        this.updateScore();
+    };
+
+    Game.prototype.secondElapse = function () {
+        this.timeCounter--;
+        this.updateTime();
+    };
+
+    Game.prototype.updateScore = function () {
+        this.scoreDiv.innerHTML = this.scoreCounter.toString();
+    };
+
+    Game.prototype.updateTime = function () {
+        this.timeDiv.innerHTML = this.timeCounter.toString();
+    };
+
+    Game.prototype.run = function () {
+        var instance = Game.Instance();
+        for (var f = 0; f < instance.flies.length; f++) {
+            instance.flies[f].move();
         }
 
-        Game.updateScore();
+        instance.updateScore();
 
-        Game.gameLoopCounter++;
-        if (Game.gameLoopCounter > Game.fps) {
-            Game.gameLoopCounter = 0;
-            Game.secondElapse();
+        instance.gameLoopCounter++;
+        if (instance.gameLoopCounter > instance.fps) {
+            instance.gameLoopCounter = 0;
+            instance.secondElapse();
         }
     };
-    Game.maxLeft = window.innerWidth;
-    Game.maxTop = window.innerHeight;
-    Game.scoreCounter = 0;
-    Game.timeCounter = 45;
-    Game.gameLoopCounter = 0;
-    Game.fps = 20;
-    Game.flies = [];
-    Game.numOfFlies = 20;
-    Game.scoreDiv = document.getElementById("scoreCounter");
-    Game.timeDiv = document.getElementById("timeCounter");
     return Game;
-})();
+})(State);

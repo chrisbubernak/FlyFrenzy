@@ -27,5 +27,11 @@ html, body {
   background-size: cover;
 }
 
+.gameState {
+  display: none;
+}
 
+.homeState {
+  display: none;
+}
 

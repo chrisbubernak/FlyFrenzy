@@ -1,12 +1,12 @@
 ﻿/// <reference path="game.ts"/>
 var Fly = (function () {
     function Fly() {
-        this.width = Game.maxLeft / 10;
+        this.width = Game.Instance().maxLeft / 10;
         this.height = this.width;
         this.totalHealth = 4;
-        this.moveSpeed = Game.maxLeft / Math.round(30 - Math.random() * 7);
-        var maxLeft = Game.maxLeft - this.width;
-        var maxTop = Game.maxTop - this.height;
+        this.moveSpeed = Game.Instance().maxLeft / Math.round(30 - Math.random() * 7);
+        var maxLeft = Game.Instance().maxLeft - this.width;
+        var maxTop = Game.Instance().maxTop - this.height;
         var x = Math.min(Math.max(0, (Math.random() * maxLeft)), maxLeft);
         var y = Math.min(Math.max(0, (Math.random() * maxTop)), maxTop);
         this.healthRemaining = this.totalHealth;
@@ -19,8 +19,8 @@ var Fly = (function () {
         var height = this.div.offsetHeight;
         var top = this.div.offsetTop;
 
-        var maxLeft = Game.maxLeft - width;
-        var maxTop = Game.maxTop - height;
+        var maxLeft = Game.Instance().maxLeft - width;
+        var maxTop = Game.Instance().maxTop - height;
 
         if (this.angle === undefined || Math.random() >= .90) {
             this.angle = Math.random() * 2 * Math.PI;
@@ -55,9 +55,12 @@ var Fly = (function () {
         div.style.height = this.height + "px";
         div.classList.add("fly");
         var that = this;
+
+        // todo: we probably don't need a new copy of this function for each fly
+        // this should be refactored out at some point
         div.onclick = function () {
             that.healthRemaining--;
-            Game.score();
+            Game.Instance().score();
             navigator.vibrate(50);
         };
         document.body.appendChild(div);
