@@ -13,14 +13,19 @@ var Game = (function (_super) {
         _super.apply(this, arguments);
         this.maxLeft = window.innerWidth;
         this.maxTop = window.innerHeight;
-        this.scoreCounter = 0;
-        this.timeCounter = 45;
+        this.startScore = 0;
+        this.startTime = 20;
+        this.scoreCounter = this.startScore;
+        this.timeCounter = this.startTime;
         this.gameLoopCounter = 0;
         this.fps = 20;
-        this.flies = [];
-        this.numOfFlies = 20;
+        this.numOfFlies = 10;
         this.scoreDiv = document.getElementById("scoreCounter");
         this.timeDiv = document.getElementById("timeCounter");
+        this.stateName = "gameState";
+        // classname for divs that need to be destroyed
+        // during exit (instead of just hidden)
+        this.temporaryDivsClass = "gameStateTemporary";
     }
     Game.Instance = function () {
         if (typeof Game.instance === "undefined") {
@@ -29,21 +34,44 @@ var Game = (function (_super) {
         return Game.instance;
     };
 
-    Game.Enter = function (app) {
-        alert("Game State Entering");
+    Game.prototype.Enter = function (app) {
+        this.scoreCounter = this.startScore;
+        this.timeCounter = this.startTime;
+        this.gameLoopCounter = 0;
+        this.flies = [];
+
+        var html = document.getElementsByClassName(this.stateName);
+        for (var i = 0; i < html.length; i++) {
+            html[i].style.display = "inline";
+        }
+
+        this.updateScore();
+        this.updateTime();
+
         var instance = Game.Instance();
+        instance.app = app;
         for (var f = 0; f < instance.numOfFlies; f++) {
             instance.flies.push(new Fly());
         }
 
-        // Start the game loop
-        var intervalId = setInterval(instance.run, 1000 / instance.fps);
-        // To stop the game, use the following:
-        //clearInterval(Game._intervalId);
+        instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
     };
 
-    Game.Exit = function (app) {
-        alert("Game State Exiting");
+    Game.prototype.Exit = function (app) {
+        var instance = Game.Instance();
+        clearInterval(instance.intervalId);
+
+        alert("Final Score: " + instance.scoreCounter);
+
+        var html = document.getElementsByClassName(this.stateName);
+        for (var i = 0; i < html.length; i++) {
+            html[i].style.display = "none";
+        }
+
+        var temporaryDivs = document.getElementsByClassName(this.temporaryDivsClass);
+        for (var i = temporaryDivs.length - 1; i >= 0; i--) {
+            temporaryDivs[i].parentNode.removeChild(temporaryDivs[i]);
+        }
     };
 
     Game.prototype.score = function () {
@@ -54,6 +82,10 @@ var Game = (function (_super) {
     Game.prototype.secondElapse = function () {
         this.timeCounter--;
         this.updateTime();
+
+        if (this.timeCounter === 0) {
+            this.app.ChangeState(Home.Instance());
+        }
     };
 
     Game.prototype.updateScore = function () {

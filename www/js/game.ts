@@ -5,16 +5,23 @@
 class Game extends State{
     public maxLeft: number = window.innerWidth;
     public maxTop: number = window.innerHeight;
-    private scoreCounter: number = 0;
-    private timeCounter: number = 45;
+    private startScore: number = 0;
+    private startTime: number = 20;
+    private scoreCounter: number = this.startScore;
+    private timeCounter: number = this.startTime;
     private gameLoopCounter: number = 0;
     private fps: number = 20;
-    private flies: Fly[] = [];
-    private numOfFlies: number = 20;
+    private flies: Fly[];
+    private numOfFlies: number = 10;
     private scoreDiv: HTMLElement = document.getElementById("scoreCounter");
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
-
+    private stateName: string = "gameState";
+    // classname for divs that need to be destroyed 
+    // during exit (instead of just hidden)
+    private temporaryDivsClass: string = "gameStateTemporary";
     private static instance: Game;
+    private intervalId: any;
+    private app: App;
 
     public static Instance(): Game {
         if (typeof Game.instance === "undefined") {
@@ -23,21 +30,44 @@ class Game extends State{
         return Game.instance;
     }
 
-    public static Enter(app: App) {
-        alert("Game State Entering");
+    public Enter(app: App) {
+        this.scoreCounter = this.startScore;
+        this.timeCounter = this.startTime;
+        this.gameLoopCounter = 0;
+        this.flies = [];
+
+        var html = document.getElementsByClassName(this.stateName);
+        for (var i = 0; i < html.length; i++) {
+            (<HTMLDivElement>html[i]).style.display = "inline";
+        }
+
+        this.updateScore();
+        this.updateTime();
+
         var instance = Game.Instance();
+        instance.app = app;
         for (var f = 0; f < instance.numOfFlies; f++) {
             instance.flies.push(new Fly());
         }
 
-        // Start the game loop
-        var intervalId = setInterval(instance.run, 1000 / instance.fps);
-        // To stop the game, use the following:
-        //clearInterval(Game._intervalId);
+        instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
     }
 
-    public static Exit(app: App) {
-        alert("Game State Exiting");
+    public Exit(app: App) {
+        var instance = Game.Instance();
+        clearInterval(instance.intervalId);
+
+        alert("Final Score: " + instance.scoreCounter);
+
+        var html = document.getElementsByClassName(this.stateName);
+        for (var i = 0; i < html.length; i++) {
+            (<HTMLDivElement>html[i]).style.display = "none";
+        }
+
+        var temporaryDivs = document.getElementsByClassName(this.temporaryDivsClass);
+        for (var i = temporaryDivs.length-1; i >= 0; i--) {
+            (<HTMLDivElement>temporaryDivs[i]).parentNode.removeChild(temporaryDivs[i]);
+        }
     }
 
     public score() {
@@ -48,6 +78,10 @@ class Game extends State{
     public secondElapse() {
         this.timeCounter--;
         this.updateTime();
+
+        if(this.timeCounter === 0) {
+            this.app.ChangeState(Home.Instance());
+        }
     }
 
 

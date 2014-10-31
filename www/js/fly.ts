@@ -61,6 +61,7 @@ class Fly {
         div.style.width = this.width + "px";
         div.style.height = this.height + "px";
         div.classList.add("fly");
+        div.classList.add("gameStateTemporary");
         var that: Fly = this;
 
         // todo: we probably don't need a new copy of this function for each fly
