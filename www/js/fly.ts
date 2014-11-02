@@ -1,15 +1,20 @@
 ﻿/// <reference path="game.ts"/>
 
 class Fly {
+    static count: number = 0;
+    id: number;
     width: number = Game.Instance().maxLeft / 10;
     height: number = this.width;
-    totalHealth: number = 4;
+    totalHealth: number = Math.round(Math.random() * 2 + 1) // totalHealth = 1 - 3;
     healthRemaining: number;
     div: HTMLDivElement;
-    moveSpeed: number = Game.Instance().maxLeft / Math.round(30 - Math.random() * 7);
+    moveSpeed: number = Game.Instance().maxLeft / Math.round(40 - Math.random() * 7);
     angle: number;
 
     constructor() {
+        this.id = Fly.count;
+        Fly.count++;
+
         var maxLeft = Game.Instance().maxLeft - this.width;
         var maxTop = Game.Instance().maxTop - this.height;
         var x = Math.min(Math.max(0, (Math.random() * maxLeft)), maxLeft);
@@ -53,6 +58,25 @@ class Fly {
         this.div.style.top = newTop + "px";
     }
 
+
+    public die(): void {
+        var x = this.div.offsetLeft;
+        var y = this.div.offsetTop;
+        // create blood splat div
+        var div = document.createElement("div");
+        div.style.top = y + "px";
+        div.style.left = x + "px";
+        div.style.width = this.width + "px";
+        div.style.height = this.height + "px";
+        div.classList.add("splat");
+        div.classList.add("gameStateTemporary");
+        document.body.appendChild(div);
+
+
+        (<HTMLDivElement>this.div).parentNode.removeChild(this.div); // remove the html element
+        (<any>navigator).vibrate(150);
+    }
+
     // todo: move this part out to a helper class for creating divs
     private createFlyDiv(x: number, y: number): HTMLDivElement {
         var div = document.createElement("div");
@@ -68,7 +92,7 @@ class Fly {
         // this should be refactored out at some point
         div.onclick = function () {
             that.healthRemaining--;
-            Game.Instance().score();
+            // todo: add some sort of blood/squash animation
             (<any>navigator).vibrate(50);
         };
         document.body.appendChild(div);

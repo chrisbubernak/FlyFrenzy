@@ -98,10 +98,23 @@ var Game = (function (_super) {
 
     Game.prototype.run = function () {
         var instance = Game.Instance();
-        for (var f = 0; f < instance.flies.length; f++) {
-            instance.flies[f].move();
+        var deadFlies = 0;
+        for (var f = instance.flies.length - 1; f >= 0; f--) {
+            var fly = instance.flies[f];
+            if (fly.healthRemaining > 0) {
+                fly.move();
+            } else {
+                instance.score();
+                fly.die();
+                instance.flies[f] = new Fly();
+                //instance.flies.splice(i, 1);
+                //deadFlies++;
+            }
         }
 
+        /*for (var i = 0; i < deadFlies; i++) {
+        instance.flies.push(new Fly());
+        }*/
         instance.updateScore();
 
         instance.gameLoopCounter++;

@@ -3,8 +3,11 @@ var Fly = (function () {
     function Fly() {
         this.width = Game.Instance().maxLeft / 10;
         this.height = this.width;
-        this.totalHealth = 4;
-        this.moveSpeed = Game.Instance().maxLeft / Math.round(30 - Math.random() * 7);
+        this.totalHealth = Math.round(Math.random() * 2 + 1);
+        this.moveSpeed = Game.Instance().maxLeft / Math.round(40 - Math.random() * 7);
+        this.id = Fly.count;
+        Fly.count++;
+
         var maxLeft = Game.Instance().maxLeft - this.width;
         var maxTop = Game.Instance().maxTop - this.height;
         var x = Math.min(Math.max(0, (Math.random() * maxLeft)), maxLeft);
@@ -46,6 +49,24 @@ var Fly = (function () {
         this.div.style.top = newTop + "px";
     };
 
+    Fly.prototype.die = function () {
+        var x = this.div.offsetLeft;
+        var y = this.div.offsetTop;
+
+        // create blood splat div
+        var div = document.createElement("div");
+        div.style.top = y + "px";
+        div.style.left = x + "px";
+        div.style.width = this.width + "px";
+        div.style.height = this.height + "px";
+        div.classList.add("splat");
+        div.classList.add("gameStateTemporary");
+        document.body.appendChild(div);
+
+        this.div.parentNode.removeChild(this.div); // remove the html element
+        navigator.vibrate(150);
+    };
+
     // todo: move this part out to a helper class for creating divs
     Fly.prototype.createFlyDiv = function (x, y) {
         var div = document.createElement("div");
@@ -61,11 +82,13 @@ var Fly = (function () {
         // this should be refactored out at some point
         div.onclick = function () {
             that.healthRemaining--;
-            Game.Instance().score();
+
+            // todo: add some sort of blood/squash animation
             navigator.vibrate(50);
         };
         document.body.appendChild(div);
         return div;
     };
+    Fly.count = 0;
     return Fly;
 })();

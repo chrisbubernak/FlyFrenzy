@@ -18,8 +18,30 @@ html, body {
   background-size: cover;
 }
 
-.background {
+
+@-webkit-keyframes splat {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+@keyframes splat {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+
+.splat {
   z-index: -1;
+  position: absolute;
+  background-image: url(../img/splat.png), url(../img/fly.png);
+  background-size: cover;
+
+  animation:splat 2s 1;
+  -webkit-animation:splat 2s 1;
+  animation-fill-mode: forwards;  
+  -webkit-animation-fill-mode: forwards;
+}
+
+.background {
+  z-index: -2;
   position: absolute;
   height: 100vh;
   width: 100vw;
@@ -33,5 +55,10 @@ html, body {
 
 .homeState {
   display: none;
+}
+
+.centered {
+  width: 75vw;
+  margin: auto;
 }
 
