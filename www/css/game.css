@@ -10,6 +10,7 @@
 
 html, body {
   margin: 0;
+  -ms-touch-action: manipulation !important; /* disable double tap zoom in Win Phone */
 }
 
 .fly {
