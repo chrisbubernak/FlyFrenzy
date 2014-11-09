@@ -1,15 +1,15 @@
-﻿/// <reference path="game.ts"/>
+﻿/// <reference path="gameState.ts"/>
 var Fly = (function () {
     function Fly() {
-        this.width = Game.Instance().maxLeft / 10;
+        this.width = GameState.Instance().maxLeft / 10;
         this.height = this.width;
         this.totalHealth = Math.round(Math.random() * 2 + 1);
-        this.moveSpeed = Game.Instance().maxLeft / Math.round(40 - Math.random() * 7);
+        this.moveSpeed = GameState.Instance().maxLeft / Math.round(40 - Math.random() * 7);
         this.id = Fly.count;
         Fly.count++;
 
-        var maxLeft = Game.Instance().maxLeft - this.width;
-        var maxTop = Game.Instance().maxTop - this.height;
+        var maxLeft = GameState.Instance().maxLeft - this.width;
+        var maxTop = GameState.Instance().maxTop - this.height;
         var x = Math.min(Math.max(0, (Math.random() * maxLeft)), maxLeft);
         var y = Math.min(Math.max(0, (Math.random() * maxTop)), maxTop);
         this.healthRemaining = this.totalHealth;
@@ -22,8 +22,8 @@ var Fly = (function () {
         var height = this.div.offsetHeight;
         var top = this.div.offsetTop;
 
-        var maxLeft = Game.Instance().maxLeft - width;
-        var maxTop = Game.Instance().maxTop - height;
+        var maxLeft = GameState.Instance().maxLeft - width;
+        var maxTop = GameState.Instance().maxTop - height;
 
         if (this.angle === undefined || Math.random() >= .90) {
             this.angle = Math.random() * 2 * Math.PI;

@@ -7,9 +7,9 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var Game = (function (_super) {
-    __extends(Game, _super);
-    function Game() {
+var GameState = (function (_super) {
+    __extends(GameState, _super);
+    function GameState() {
         _super.apply(this, arguments);
         this.maxLeft = window.innerWidth;
         this.maxTop = window.innerHeight;
@@ -27,14 +27,14 @@ var Game = (function (_super) {
         // during exit (instead of just hidden)
         this.temporaryDivsClass = "gameStateTemporary";
     }
-    Game.Instance = function () {
-        if (typeof Game.instance === "undefined") {
-            Game.instance = new Game();
+    GameState.Instance = function () {
+        if (typeof GameState.instance === "undefined") {
+            GameState.instance = new GameState();
         }
-        return Game.instance;
+        return GameState.instance;
     };
 
-    Game.prototype.Enter = function (app) {
+    GameState.prototype.Enter = function (app) {
         this.scoreCounter = this.startScore;
         this.timeCounter = this.startTime;
         this.gameLoopCounter = 0;
@@ -48,7 +48,7 @@ var Game = (function (_super) {
         this.updateScore();
         this.updateTime();
 
-        var instance = Game.Instance();
+        var instance = GameState.Instance();
         instance.app = app;
         for (var f = 0; f < instance.numOfFlies; f++) {
             instance.flies.push(new Fly());
@@ -57,8 +57,8 @@ var Game = (function (_super) {
         instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
     };
 
-    Game.prototype.Exit = function (app) {
-        var instance = Game.Instance();
+    GameState.prototype.Exit = function (app) {
+        var instance = GameState.Instance();
         clearInterval(instance.intervalId);
 
         alert("Final Score: " + instance.scoreCounter);
@@ -74,46 +74,46 @@ var Game = (function (_super) {
         }
     };
 
-    Game.prototype.OnPause = function (app) {
-        var instance = Game.Instance();
+    GameState.prototype.OnPause = function (app) {
+        var instance = GameState.Instance();
         clearInterval(instance.intervalId);
     };
 
-    Game.prototype.OnResume = function (app) {
-        var instance = Game.Instance();
+    GameState.prototype.OnResume = function (app) {
+        var instance = GameState.Instance();
         if (this.timeCounter > 0) {
             instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
         }
     };
 
-    Game.prototype.OnBack = function (app) {
-        app.ChangeState(Home.Instance());
+    GameState.prototype.OnBack = function (app) {
+        app.ChangeState(HomeState.Instance());
     };
 
-    Game.prototype.score = function () {
+    GameState.prototype.score = function () {
         this.scoreCounter++;
         this.updateScore();
     };
 
-    Game.prototype.secondElapse = function () {
+    GameState.prototype.secondElapse = function () {
         this.timeCounter--;
         this.updateTime();
 
         if (this.timeCounter === 0) {
-            this.app.ChangeState(Home.Instance());
+            this.app.ChangeState(HomeState.Instance());
         }
     };
 
-    Game.prototype.updateScore = function () {
+    GameState.prototype.updateScore = function () {
         this.scoreDiv.innerHTML = this.scoreCounter.toString();
     };
 
-    Game.prototype.updateTime = function () {
+    GameState.prototype.updateTime = function () {
         this.timeDiv.innerHTML = this.timeCounter.toString();
     };
 
-    Game.prototype.run = function () {
-        var instance = Game.Instance();
+    GameState.prototype.run = function () {
+        var instance = GameState.Instance();
         var deadFlies = 0;
         for (var f = instance.flies.length - 1; f >= 0; f--) {
             var fly = instance.flies[f];
@@ -134,5 +134,5 @@ var Game = (function (_super) {
             instance.secondElapse();
         }
     };
-    return Game;
+    return GameState;
 })(State);

@@ -1,26 +1,26 @@
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
-/// <reference path="game.ts"/>
+/// <reference path="gameState.ts"/>
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var Home = (function (_super) {
-    __extends(Home, _super);
-    function Home() {
+var HomeState = (function (_super) {
+    __extends(HomeState, _super);
+    function HomeState() {
         _super.apply(this, arguments);
         this.stateName = "homeState";
     }
-    Home.Instance = function () {
-        if (typeof Home.instance === "undefined") {
-            Home.instance = new Home();
+    HomeState.Instance = function () {
+        if (typeof HomeState.instance === "undefined") {
+            HomeState.instance = new HomeState();
         }
-        return Home.instance;
+        return HomeState.instance;
     };
 
-    Home.prototype.Enter = function (app) {
+    HomeState.prototype.Enter = function (app) {
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             html[i].style.display = "inline";
@@ -28,25 +28,25 @@ var Home = (function (_super) {
 
         var startButton = document.getElementById("startButton");
         startButton.onclick = function () {
-            app.ChangeState(Game.Instance());
+            app.ChangeState(GameState.Instance());
         };
     };
 
-    Home.prototype.Exit = function (app) {
+    HomeState.prototype.Exit = function (app) {
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             html[i].style.display = "none";
         }
     };
 
-    Home.prototype.OnBack = function (app) {
+    HomeState.prototype.OnBack = function (app) {
         navigator.app.exitApp();
     };
 
-    Home.prototype.OnPause = function (app) {
+    HomeState.prototype.OnPause = function (app) {
         // from the home screen there is really no
         // sense to pause just exit the app
         navigator.app.exitApp();
     };
-    return Home;
+    return HomeState;
 })(State);

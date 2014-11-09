@@ -1,8 +1,8 @@
 /// <reference path="state.ts"/>
-/// <reference path="home.ts"/>
+/// <reference path="homeState.ts"/>
 var App = (function () {
     function App() {
-        this.ChangeState(Home.Instance());
+        this.ChangeState(HomeState.Instance());
     }
     App.prototype.ChangeState = function (newState) {
         if (!newState) {

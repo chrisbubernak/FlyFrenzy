@@ -2,7 +2,7 @@
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
 
-class Game extends State{
+class GameState extends State{
     public maxLeft: number = window.innerWidth;
     public maxTop: number = window.innerHeight;
     private startScore: number = 0;
@@ -19,15 +19,15 @@ class Game extends State{
     // classname for divs that need to be destroyed 
     // during exit (instead of just hidden)
     private temporaryDivsClass: string = "gameStateTemporary";
-    private static instance: Game;
+    private static instance: GameState;
     private intervalId: any;
     private app: App;
 
-    public static Instance(): Game {
-        if (typeof Game.instance === "undefined") {
-            Game.instance = new Game();
+    public static Instance(): GameState {
+        if (typeof GameState.instance === "undefined") {
+            GameState.instance = new GameState();
         }
-        return Game.instance;
+        return GameState.instance;
     }
 
     public Enter(app: App) {
@@ -44,7 +44,7 @@ class Game extends State{
         this.updateScore();
         this.updateTime();
 
-        var instance = Game.Instance();
+        var instance = GameState.Instance();
         instance.app = app;
         for (var f = 0; f < instance.numOfFlies; f++) {
             instance.flies.push(new Fly());
@@ -54,7 +54,7 @@ class Game extends State{
     }
 
     public Exit(app: App) {
-        var instance = Game.Instance();
+        var instance = GameState.Instance();
         clearInterval(instance.intervalId);
 
         alert("Final Score: " + instance.scoreCounter);
@@ -71,19 +71,19 @@ class Game extends State{
     }
 
     public OnPause(app: App) {
-        var instance = Game.Instance();
+        var instance = GameState.Instance();
         clearInterval(instance.intervalId);
     }
 
     public OnResume(app: App) {
-        var instance = Game.Instance();
+        var instance = GameState.Instance();
         if (this.timeCounter > 0) {
             instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
         }
     }
 
     public OnBack(app: App) {
-        app.ChangeState(Home.Instance());
+        app.ChangeState(HomeState.Instance());
     }
 
     public score() {
@@ -96,7 +96,7 @@ class Game extends State{
         this.updateTime();
 
         if(this.timeCounter === 0) {
-            this.app.ChangeState(Home.Instance());
+            this.app.ChangeState(HomeState.Instance());
         }
     }
 
@@ -109,7 +109,7 @@ class Game extends State{
     }
 
     private run () {
-        var instance = Game.Instance();
+        var instance = GameState.Instance();
         var deadFlies: number = 0;
         for (var f = instance.flies.length - 1; f >= 0; f--) {
             var fly = instance.flies[f];

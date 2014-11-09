@@ -1,11 +1,11 @@
 /// <reference path="state.ts"/>
-/// <reference path="home.ts"/>
+/// <reference path="homeState.ts"/>
 
 class App implements StateMachine{
 	currentState: State;
 
 	constructor() {
-		this.ChangeState(Home.Instance());
+		this.ChangeState(HomeState.Instance());
 	}
 
 	public ChangeState(newState: State): void {

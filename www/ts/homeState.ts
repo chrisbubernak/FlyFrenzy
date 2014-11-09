@@ -1,16 +1,16 @@
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
-/// <reference path="game.ts"/>
+/// <reference path="gameState.ts"/>
 
-class Home extends State {
-	private static instance: Home;
+class HomeState extends State {
+	private static instance: HomeState;
     private stateName: string = "homeState"; 
 
-    public static Instance(): Home {
-        if (typeof Home.instance === "undefined") {
-            Home.instance = new Home();
+    public static Instance(): HomeState {
+        if (typeof HomeState.instance === "undefined") {
+            HomeState.instance = new HomeState();
         }
-        return Home.instance;
+        return HomeState.instance;
     }
 
     public Enter(app: App) {
@@ -20,7 +20,7 @@ class Home extends State {
         }
 
         var startButton = <any>document.getElementById("startButton");
-        startButton.onclick = function() { app.ChangeState(Game.Instance()); };
+        startButton.onclick = function() { app.ChangeState(GameState.Instance()); };
     }
 
     public Exit(app: App) {

@@ -1,22 +1,22 @@
-﻿/// <reference path="game.ts"/>
+﻿/// <reference path="gameState.ts"/>
 
 class Fly {
     static count: number = 0;
     id: number;
-    width: number = Game.Instance().maxLeft / 10;
+    width: number = GameState.Instance().maxLeft / 10;
     height: number = this.width;
     totalHealth: number = Math.round(Math.random() * 2 + 1) // totalHealth = 1 - 3;
     healthRemaining: number;
     div: HTMLDivElement;
-    moveSpeed: number = Game.Instance().maxLeft / Math.round(40 - Math.random() * 7);
+    moveSpeed: number = GameState.Instance().maxLeft / Math.round(40 - Math.random() * 7);
     angle: number;
 
     constructor() {
         this.id = Fly.count;
         Fly.count++;
 
-        var maxLeft = Game.Instance().maxLeft - this.width;
-        var maxTop = Game.Instance().maxTop - this.height;
+        var maxLeft = GameState.Instance().maxLeft - this.width;
+        var maxTop = GameState.Instance().maxTop - this.height;
         var x = Math.min(Math.max(0, (Math.random() * maxLeft)), maxLeft);
         var y = Math.min(Math.max(0, (Math.random() * maxTop)), maxTop);
         this.healthRemaining = this.totalHealth;
@@ -30,8 +30,8 @@ class Fly {
         var height = this.div.offsetHeight;
         var top = this.div.offsetTop;
 
-        var maxLeft = Game.Instance().maxLeft - width;
-        var maxTop = Game.Instance().maxTop - height;
+        var maxLeft = GameState.Instance().maxLeft - width;
+        var maxTop = GameState.Instance().maxTop - height;
 
 
         if (this.angle === undefined || Math.random() >= .90) {
