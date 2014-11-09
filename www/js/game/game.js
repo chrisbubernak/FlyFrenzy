@@ -74,6 +74,22 @@ var Game = (function (_super) {
         }
     };
 
+    Game.prototype.OnPause = function (app) {
+        var instance = Game.Instance();
+        clearInterval(instance.intervalId);
+    };
+
+    Game.prototype.OnResume = function (app) {
+        var instance = Game.Instance();
+        if (this.timeCounter > 0) {
+            instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
+        }
+    };
+
+    Game.prototype.OnBack = function (app) {
+        app.ChangeState(Home.Instance());
+    };
+
     Game.prototype.score = function () {
         this.scoreCounter++;
         this.updateScore();
@@ -107,14 +123,9 @@ var Game = (function (_super) {
                 instance.score();
                 fly.die();
                 instance.flies[f] = new Fly();
-                //instance.flies.splice(i, 1);
-                //deadFlies++;
             }
         }
 
-        /*for (var i = 0; i < deadFlies; i++) {
-        instance.flies.push(new Fly());
-        }*/
         instance.updateScore();
 
         instance.gameLoopCounter++;

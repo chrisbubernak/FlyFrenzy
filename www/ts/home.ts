@@ -29,4 +29,14 @@ class Home extends State {
             (<HTMLDivElement>html[i]).style.display = "none";
         }
     }
+
+    public OnBack(app: App) {
+        (<any>navigator).app.exitApp();
+    }
+
+    public OnPause(app: App) {
+        // from the home screen there is really no 
+        // sense to pause just exit the app
+        (<any>navigator).app.exitApp();
+    }
 }

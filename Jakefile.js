@@ -5,20 +5,21 @@ var jsDest = "www/js/";
 
 desc('This is the default task.');
 task('default', [], function (params) {
-  console.log('This is the default task.');
+  console.log('No Default task defined');
 });
 
 desc('Build Android Release');
 task('android', [], function (params) {
   console.log('Building Android Phone Release...');
   console.log('Signing Android Release APK...');
-  console.log('Byte Aligning Android Release APK...')
+  console.log('Byte Aligning Android Release APK...');
+  console.log('NOT IMPLEMENTED');
 });
 
 desc('Build Release Windows Phone');
 task('wp8', [], function (params) {
   console.log('Building Windows Phone Release');
-  //console.log(sys.inspect(arguments));
+  console.log('NOT IMPLEMENTED');
 });
 
 desc('Compiles TS files into JS');

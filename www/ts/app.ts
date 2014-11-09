@@ -15,12 +15,24 @@ class App implements StateMachine{
 		}
 		
 		if (this.currentState) {
-			// this should only get called during app start up
-			// when we go from no state to home state
+			// we need this because on app start we won't have 
+			// a current state and so we don't need to call exit
 			this.currentState.Exit(this);
 		}
 
 		this.currentState = newState;
 		this.currentState.Enter(this);
+	}
+
+	public OnPause() {
+		this.currentState.OnPause(this);
+	}
+
+	public OnResume() {
+		this.currentState.OnResume(this);
+	}
+
+	public OnBack() {
+		this.currentState.OnBack(this);
 	}
 }

@@ -17,4 +17,16 @@ class State {
 	public Execute(stateMachine: StateMachine): void {
 		alert("Execute() not implemented");
 	}
+
+	public OnPause(stateMachine: StateMachine): void {
+		alert("OnPause() not implemented");
+	}
+
+	public OnResume(stateMachine: StateMachine): void {
+		alert("OnResume() not implemented");
+	}
+
+	public OnBack(stateMachine: StateMachine): void {
+		alert("OnBack() not implemented");
+	}
 }

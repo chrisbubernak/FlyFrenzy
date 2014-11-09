@@ -18,5 +18,17 @@ var State = (function () {
     State.prototype.Execute = function (stateMachine) {
         alert("Execute() not implemented");
     };
+
+    State.prototype.OnPause = function (stateMachine) {
+        alert("OnPause() not implemented");
+    };
+
+    State.prototype.OnResume = function (stateMachine) {
+        alert("OnResume() not implemented");
+    };
+
+    State.prototype.OnBack = function (stateMachine) {
+        alert("OnBack() not implemented");
+    };
     return State;
 })();

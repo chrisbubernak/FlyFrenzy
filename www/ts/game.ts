@@ -70,6 +70,22 @@ class Game extends State{
         }
     }
 
+    public OnPause(app: App) {
+        var instance = Game.Instance();
+        clearInterval(instance.intervalId);
+    }
+
+    public OnResume(app: App) {
+        var instance = Game.Instance();
+        if (this.timeCounter > 0) {
+            instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
+        }
+    }
+
+    public OnBack(app: App) {
+        app.ChangeState(Home.Instance());
+    }
+
     public score() {
         this.scoreCounter++;
         this.updateScore();
@@ -103,14 +119,8 @@ class Game extends State{
                 instance.score();
                 fly.die();
                 instance.flies[f] = new Fly();
-                //instance.flies.splice(i, 1);
-                //deadFlies++;
             }
         }
-
-        /*for (var i = 0; i < deadFlies; i++) {
-            instance.flies.push(new Fly());
-        }*/
 
         instance.updateScore();
 

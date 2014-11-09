@@ -38,5 +38,15 @@ var Home = (function (_super) {
             html[i].style.display = "none";
         }
     };
+
+    Home.prototype.OnBack = function (app) {
+        navigator.app.exitApp();
+    };
+
+    Home.prototype.OnPause = function (app) {
+        // from the home screen there is really no
+        // sense to pause just exit the app
+        navigator.app.exitApp();
+    };
     return Home;
 })(State);
