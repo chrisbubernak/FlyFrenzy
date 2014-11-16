@@ -63,3 +63,14 @@ html, body {
   margin: auto;
 }
 
+
+
+/*
+ * HOME CSS
+ */
+
+.button {
+  width: 100%;
+  border: 1px black solid;
+  text-align: center;
+}

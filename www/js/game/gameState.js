@@ -58,11 +58,6 @@ var GameState = (function (_super) {
     };
 
     GameState.prototype.Exit = function (app) {
-        var instance = GameState.Instance();
-        clearInterval(instance.intervalId);
-
-        alert("Final Score: " + instance.scoreCounter);
-
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             html[i].style.display = "none";
@@ -95,12 +90,19 @@ var GameState = (function (_super) {
         this.updateScore();
     };
 
+    GameState.prototype.confirmDialog = function () {
+        var instance = GameState.Instance();
+        this.app.ChangeState(HomeState.Instance());
+    };
+
     GameState.prototype.secondElapse = function () {
         this.timeCounter--;
         this.updateTime();
 
         if (this.timeCounter === 0) {
-            this.app.ChangeState(HomeState.Instance());
+            var instance = GameState.Instance();
+            clearInterval(instance.intervalId);
+            navigator.notification.alert("Final Score: " + instance.scoreCounter, this.confirmDialog, "Game Over", "Done");
         }
     };
 

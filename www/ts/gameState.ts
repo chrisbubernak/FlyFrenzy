@@ -54,11 +54,6 @@ class GameState extends State{
     }
 
     public Exit(app: App) {
-        var instance = GameState.Instance();
-        clearInterval(instance.intervalId);
-
-        alert("Final Score: " + instance.scoreCounter);
-
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             (<HTMLDivElement>html[i]).style.display = "none";
@@ -91,12 +86,24 @@ class GameState extends State{
         this.updateScore();
     }
 
+    private confirmDialog() {
+        var instance = GameState.Instance();
+        this.app.ChangeState(HomeState.Instance());        
+    }
+
     public secondElapse() {
         this.timeCounter--;
         this.updateTime();
 
         if(this.timeCounter === 0) {
-            this.app.ChangeState(HomeState.Instance());
+            var instance = GameState.Instance();
+            clearInterval(instance.intervalId);
+            (<any>navigator).notification.alert(
+                "Final Score: " + instance.scoreCounter,
+                this.confirmDialog,
+                "Game Over",            
+                "Done"     
+            );
         }
     }
 

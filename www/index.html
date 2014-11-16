@@ -22,7 +22,10 @@
             <h2>Fly Frenzy<h2>
             So many flies. So little time.
             <br>
-            <button id="startButton">Start!</button>
+            <div id="startButton" class="button">Start</div>
+            <div id="highScoresButton" class="button">High Scores</div>
+            <div id="aboutButton" class="button">About</div>
+
         </div>
     </div>
 
@@ -48,7 +51,7 @@
             document.addEventListener("resume", onResume, false);
         }
         document.addEventListener("deviceready", deviceReady, false);
-
+        
         function onBack() {
             app.OnBack();
         }

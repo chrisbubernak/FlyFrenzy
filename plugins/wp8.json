@@ -11,6 +11,10 @@
                         {
                             "xml": "<feature name=\"Vibration\"><param name=\"wp-package\" value=\"Vibration\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Notification\"><param name=\"wp-package\" value=\"Notification\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -19,6 +23,9 @@
     },
     "installed_plugins": {
         "org.apache.cordova.vibration": {
+            "PACKAGE_NAME": "{22277e20-5bd6-11e4-ad6f-c59e295adf24}"
+        },
+        "org.apache.cordova.dialogs": {
             "PACKAGE_NAME": "{22277e20-5bd6-11e4-ad6f-c59e295adf24}"
         }
     },

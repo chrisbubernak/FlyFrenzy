@@ -9,6 +9,9 @@
     "installed_plugins": {
         "org.apache.cordova.vibration": {
             "PACKAGE_NAME": "com.bubernak.flysmash"
+        },
+        "org.apache.cordova.dialogs": {
+            "PACKAGE_NAME": "com.bubernak.flysmash"
         }
     },
     "dependent_plugins": {}
