@@ -3,23 +3,28 @@
 class Fly {
     static count: number = 0;
     id: number;
-    width: number = GameState.Instance().maxLeft / 10;
-    height: number = this.width;
-    totalHealth: number = Math.round(Math.random() * 2 + 1) // totalHealth = 1 - 3;
+    width: number;
+    height: number;
+    totalHealth: number;
     healthRemaining: number;
     div: HTMLDivElement;
-    moveSpeed: number = GameState.Instance().maxLeft / Math.round(40 - Math.random() * 7);
+    moveSpeed: number;
     angle: number;
 
-    constructor() {
+    constructor(width: number, moveSpeed: number, totalHealth: number) {
         this.id = Fly.count;
         Fly.count++;
+
+        this.width = width;
+        this.height = this.width;
+        this.moveSpeed = moveSpeed;
+        this.totalHealth = totalHealth;
+        this.healthRemaining = this.totalHealth;
 
         var maxLeft = GameState.Instance().maxLeft - this.width;
         var maxTop = GameState.Instance().maxTop - this.height;
         var x = Math.min(Math.max(0, (Math.random() * maxLeft)), maxLeft);
         var y = Math.min(Math.max(0, (Math.random() * maxTop)), maxTop);
-        this.healthRemaining = this.totalHealth;
 
         this.div = this.createFlyDiv(x, y);
     }

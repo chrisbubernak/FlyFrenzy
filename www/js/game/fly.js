@@ -1,18 +1,19 @@
 ﻿/// <reference path="gameState.ts"/>
 var Fly = (function () {
-    function Fly() {
-        this.width = GameState.Instance().maxLeft / 10;
-        this.height = this.width;
-        this.totalHealth = Math.round(Math.random() * 2 + 1);
-        this.moveSpeed = GameState.Instance().maxLeft / Math.round(40 - Math.random() * 7);
+    function Fly(width, moveSpeed, totalHealth) {
         this.id = Fly.count;
         Fly.count++;
+
+        this.width = width;
+        this.height = this.width;
+        this.moveSpeed = moveSpeed;
+        this.totalHealth = totalHealth;
+        this.healthRemaining = this.totalHealth;
 
         var maxLeft = GameState.Instance().maxLeft - this.width;
         var maxTop = GameState.Instance().maxTop - this.height;
         var x = Math.min(Math.max(0, (Math.random() * maxLeft)), maxLeft);
         var y = Math.min(Math.max(0, (Math.random() * maxTop)), maxTop);
-        this.healthRemaining = this.totalHealth;
 
         this.div = this.createFlyDiv(x, y);
     }

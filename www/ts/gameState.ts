@@ -1,20 +1,21 @@
 ﻿/// <reference path="fly.ts"/>
+/// <reference path="flyFactory.ts"/>
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
 
 class GameState extends State{
     public maxLeft: number = window.innerWidth;
     public maxTop: number = window.innerHeight;
-    private startScore: number = 0;
+    private startLevel: number = 1;
+    private currentLevel: number = this.startLevel;
     private startTime: number = 20;
-    private scoreCounter: number = this.startScore;
     private timeCounter: number = this.startTime;
     private gameLoopCounter: number = 0;
     private fps: number = 20;
     private flies: Fly[];
-    private numOfFlies: number = 10;
-    private scoreDiv: HTMLElement = document.getElementById("scoreCounter");
+    private numOfFlies: number = 8;
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
+    private levelDiv: HTMLElement = document.getElementById("levelCounter");
     private stateName: string = "gameState";
     // classname for divs that need to be destroyed 
     // during exit (instead of just hidden)
@@ -31,24 +32,25 @@ class GameState extends State{
     }
 
     public Enter(app: App) {
-        this.scoreCounter = this.startScore;
         this.timeCounter = this.startTime;
         this.gameLoopCounter = 0;
         this.flies = [];
+
 
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             (<HTMLDivElement>html[i]).style.display = "inline";
         }
 
-        this.updateScore();
         this.updateTime();
 
         var instance = GameState.Instance();
         instance.app = app;
         for (var f = 0; f < instance.numOfFlies; f++) {
-            instance.flies.push(new Fly());
+            instance.flies.push(FlyFactory.CreateFly(instance.currentLevel));
         }
+
+        this.levelDiv.innerHTML = this.currentLevel.toString();
 
         instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
     }
@@ -81,34 +83,50 @@ class GameState extends State{
         app.ChangeState(HomeState.Instance());
     }
 
-    public score() {
-        this.scoreCounter++;
-        this.updateScore();
+    private timeUpDialog(index: number) {
+        //index 1 = Try Again, 2 = Exit, 0 = no button
+        var instance = GameState.Instance();
+        if (index === 1) {
+            // re-try the level
+            this.app.ChangeState(GameState.Instance());
+        } else if (index === 2) {
+            this.app.ChangeState(HomeState.Instance());
+        } else {
+            // lets just let user re-try the level
+            this.app.ChangeState(GameState.Instance());
+        }
     }
 
-    private confirmDialog() {
+    private levelCompleteDialog(index: number) {
+        // update the level
+        GameState.instance.currentLevel++;
+
+        // index 1 = Next Level, 2 = Exit
         var instance = GameState.Instance();
-        this.app.ChangeState(HomeState.Instance());        
+        if (index === 1) {
+            this.app.ChangeState(GameState.Instance());
+        } else if (index === 2) {
+            this.app.ChangeState(HomeState.Instance());
+        } else {
+            // assume user wants the next level
+            this.app.ChangeState(GameState.Instance());
+        }   
     }
 
     public secondElapse() {
         this.timeCounter--;
         this.updateTime();
 
-        if(this.timeCounter === 0) {
+        if(this.timeCounter === 0 && this.flies.length > 0) {
             var instance = GameState.Instance();
             clearInterval(instance.intervalId);
-            (<any>navigator).notification.alert(
-                "Final Score: " + instance.scoreCounter,
-                this.confirmDialog,
+            (<any>navigator).notification.confirm(
+                instance.flies.length + " flies remaining." ,
+                this.timeUpDialog,
                 "Game Over",            
-                "Done"     
+                ["Try Again", "Exit"]  
             );
         }
-    }
-
-    private updateScore() {
-        this.scoreDiv.innerHTML = this.scoreCounter.toString();
     }
 
     private updateTime() {
@@ -123,13 +141,20 @@ class GameState extends State{
             if (fly.healthRemaining > 0) { 
                 fly.move();
             } else {
-                instance.score();
                 fly.die();
-                instance.flies[f] = new Fly();
+                instance.flies.splice(f, 1);
             }
         }
 
-        instance.updateScore();
+        if (instance.flies.length === 0) {
+            clearInterval(instance.intervalId);
+            (<any>navigator).notification.confirm(
+                "Level Completed",
+                instance.levelCompleteDialog,
+                "Great Job!",            
+                ["Next Level", "Exit"]  
+            );
+        } 
 
         instance.gameLoopCounter++;
         if (instance.gameLoopCounter > instance.fps) {

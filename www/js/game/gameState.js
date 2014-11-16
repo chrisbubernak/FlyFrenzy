@@ -1,4 +1,5 @@
 ﻿/// <reference path="fly.ts"/>
+/// <reference path="flyFactory.ts"/>
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
 var __extends = this.__extends || function (d, b) {
@@ -13,15 +14,15 @@ var GameState = (function (_super) {
         _super.apply(this, arguments);
         this.maxLeft = window.innerWidth;
         this.maxTop = window.innerHeight;
-        this.startScore = 0;
+        this.startLevel = 1;
+        this.currentLevel = this.startLevel;
         this.startTime = 20;
-        this.scoreCounter = this.startScore;
         this.timeCounter = this.startTime;
         this.gameLoopCounter = 0;
         this.fps = 20;
-        this.numOfFlies = 10;
-        this.scoreDiv = document.getElementById("scoreCounter");
+        this.numOfFlies = 8;
         this.timeDiv = document.getElementById("timeCounter");
+        this.levelDiv = document.getElementById("levelCounter");
         this.stateName = "gameState";
         // classname for divs that need to be destroyed
         // during exit (instead of just hidden)
@@ -35,7 +36,6 @@ var GameState = (function (_super) {
     };
 
     GameState.prototype.Enter = function (app) {
-        this.scoreCounter = this.startScore;
         this.timeCounter = this.startTime;
         this.gameLoopCounter = 0;
         this.flies = [];
@@ -45,14 +45,15 @@ var GameState = (function (_super) {
             html[i].style.display = "inline";
         }
 
-        this.updateScore();
         this.updateTime();
 
         var instance = GameState.Instance();
         instance.app = app;
         for (var f = 0; f < instance.numOfFlies; f++) {
-            instance.flies.push(new Fly());
+            instance.flies.push(FlyFactory.CreateFly(instance.currentLevel));
         }
+
+        this.levelDiv.innerHTML = this.currentLevel.toString();
 
         instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
     };
@@ -85,29 +86,45 @@ var GameState = (function (_super) {
         app.ChangeState(HomeState.Instance());
     };
 
-    GameState.prototype.score = function () {
-        this.scoreCounter++;
-        this.updateScore();
+    GameState.prototype.timeUpDialog = function (index) {
+        //index 1 = Try Again, 2 = Exit, 0 = no button
+        var instance = GameState.Instance();
+        if (index === 1) {
+            // re-try the level
+            this.app.ChangeState(GameState.Instance());
+        } else if (index === 2) {
+            this.app.ChangeState(HomeState.Instance());
+        } else {
+            // lets just let user re-try the level
+            this.app.ChangeState(GameState.Instance());
+        }
     };
 
-    GameState.prototype.confirmDialog = function () {
+    GameState.prototype.levelCompleteDialog = function (index) {
+        // update the level
+        GameState.instance.currentLevel++;
+
+        // index 1 = Next Level, 2 = Exit
         var instance = GameState.Instance();
-        this.app.ChangeState(HomeState.Instance());
+        if (index === 1) {
+            this.app.ChangeState(GameState.Instance());
+        } else if (index === 2) {
+            this.app.ChangeState(HomeState.Instance());
+        } else {
+            // assume user wants the next level
+            this.app.ChangeState(GameState.Instance());
+        }
     };
 
     GameState.prototype.secondElapse = function () {
         this.timeCounter--;
         this.updateTime();
 
-        if (this.timeCounter === 0) {
+        if (this.timeCounter === 0 && this.flies.length > 0) {
             var instance = GameState.Instance();
             clearInterval(instance.intervalId);
-            navigator.notification.alert("Final Score: " + instance.scoreCounter, this.confirmDialog, "Game Over", "Done");
+            navigator.notification.confirm(instance.flies.length + " flies remaining.", this.timeUpDialog, "Game Over", ["Try Again", "Exit"]);
         }
-    };
-
-    GameState.prototype.updateScore = function () {
-        this.scoreDiv.innerHTML = this.scoreCounter.toString();
     };
 
     GameState.prototype.updateTime = function () {
@@ -122,13 +139,15 @@ var GameState = (function (_super) {
             if (fly.healthRemaining > 0) {
                 fly.move();
             } else {
-                instance.score();
                 fly.die();
-                instance.flies[f] = new Fly();
+                instance.flies.splice(f, 1);
             }
         }
 
-        instance.updateScore();
+        if (instance.flies.length === 0) {
+            clearInterval(instance.intervalId);
+            navigator.notification.confirm("Level Completed", instance.levelCompleteDialog, "Great Job!", ["Next Level", "Exit"]);
+        }
 
         instance.gameLoopCounter++;
         if (instance.gameLoopCounter > instance.fps) {
