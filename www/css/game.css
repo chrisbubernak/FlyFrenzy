@@ -35,19 +35,29 @@ html, body {
   background-image: url(../img/splat.png), url(../img/fly.png);
   background-size: cover;
 
-  animation:splat 2s 1;
-  -webkit-animation:splat 2s 1;
+  animation:splat 3s 1;
+  -webkit-animation:splat 3s 1;
   animation-fill-mode: forwards;  
   -webkit-animation-fill-mode: forwards;
 }
 
-.background {
-  z-index: -2;
+.fullscreen {
   position: absolute;
   height: 100vh;
   width: 100vw;
-  background-image: url(../img/background.jpg);
+}
+
+.background {  
+  z-index: -2;
+  background-image: url(../img/background.png);
   background-size: cover;
+}
+.transparent {
+  -webkit-filter: blur(3px);
+  -moz-filter: blur(3px);
+  -o-filter: blur(3px);
+  -ms-filter: blur(3px);
+  filter: blur(3px);
 }
 
 .gameState {
@@ -59,7 +69,7 @@ html, body {
 }
 
 .centered {
-  width: 75vw;
+  width: 65vw;
   margin: auto;
 }
 
@@ -69,8 +79,33 @@ html, body {
  * HOME CSS
  */
 
+ @font-face {
+  font-family: "flyFont";
+  src: url("../font/gooddog.otf") format("opentype");  
+}
+    
+
 .button {
   width: 100%;
-  border: 1px black solid;
+  border: 2px white solid;
+  border-radius: 15px;
   text-align: center;
+  color: white;
+  margin-bottom: 20px;
+  font-size: 30px;
+  font-family: "flyFont";
+}
+
+.title {
+  width: 100%;
+  text-align: center;
+  color: white;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 70px;
+  font-family: "flyFont";
+}
+
+.menuFly {
+  max-height: 45vw;
 }
