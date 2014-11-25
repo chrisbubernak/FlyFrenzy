@@ -1,0 +1,24 @@
+{
+    "version": "6.12.2",
+    "name": "com.google.admobsdk",
+    "cordova_name": "AdMob SDK for Android, iOS and WP8",
+    "description": "AdMob SDK for Android, iOS and WP8 only, as dependency of other plugins",
+    "keywords": [
+        "google",
+        "play",
+        "admob",
+        "sdk"
+    ],
+    "platforms": [
+        "android",
+        "ios",
+        "wp8",
+        "windows"
+    ],
+    "engines": [
+        {
+            "name": "cordova",
+            "version": ">=3.0.0"
+        }
+    ]
+}

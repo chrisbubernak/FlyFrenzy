@@ -53,6 +53,7 @@
                 "backbutton", onBack, false);
             document.addEventListener("pause", onPause, false);
             document.addEventListener("resume", onResume, false);
+            initAds();
         }
         document.addEventListener("deviceready", deviceReady, false);
         
@@ -66,6 +67,19 @@
 
         function onPause() {
             app.OnPause();
+        }
+
+        function initAds() {
+            var bannerId = "ca-app-pub-8670772325508169/8169230735";
+            window.plugins.AdMob.setOptions( {
+                publisherId: bannerId,
+                bannerAtTop: false, // set to true, to put banner at top
+                overlap: true, // set to true, to allow banner overlap webview
+                offsetTopBar: false, // set to true to avoid ios7 status bar overlap
+                isTesting: false, // receiving test ad
+                autoShow: true // auto show interstitial ad when loaded
+            });
+            window.plugins.AdMob.createBannerView();
         }
     </script>
 

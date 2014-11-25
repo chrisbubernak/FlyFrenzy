@@ -15,6 +15,20 @@
                         {
                             "xml": "<feature name=\"Notification\"><param name=\"wp-package\" value=\"Notification\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"AdMob\"><param name=\"wp-package\" value=\"AdMob\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "Properties/WMAppManifest.xml": {
+                "parents": {
+                    "/Deployment/App/Capabilities": [
+                        {
+                            "xml": "<Capability Name=\"ID_CAP_LOCATION\" />",
+                            "count": 1
                         }
                     ]
                 }
@@ -27,7 +41,14 @@
         },
         "org.apache.cordova.dialogs": {
             "PACKAGE_NAME": "{22277e20-5bd6-11e4-ad6f-c59e295adf24}"
+        },
+        "com.rjfun.cordova.plugin.admob": {
+            "PACKAGE_NAME": "{22277e20-5bd6-11e4-ad6f-c59e295adf24}"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "com.google.admobsdk": {
+            "PACKAGE_NAME": "{22277e20-5bd6-11e4-ad6f-c59e295adf24}"
+        }
+    }
 }

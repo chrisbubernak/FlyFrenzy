@@ -11,6 +11,13 @@
 html, body {
   margin: 0;
   -ms-touch-action: manipulation !important; /* disable double tap zoom in Win Phone */
+
+  /* disable scrolling away from content in Win Phone (and maybe other platforms?) */
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  overflow: hidden;
+  -ms-content-zooming: none; 
+  -ms-touch-action:none;
 }
 
 .fly {
