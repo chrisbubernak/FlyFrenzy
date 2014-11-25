@@ -26,6 +26,29 @@ html, body {
   background-size: cover;
 }
 
+.poisonFly {
+  position: absolute;
+  background-image: url(../img/poisonFly.png);
+  background-size: cover;
+}
+
+.fastFly {
+  position: absolute;
+  background-image: url(../img/fastFly.png);
+  background-size: cover;
+}
+
+.bigFly {
+  position: absolute;
+  background-image: url(../img/bigFly.png);
+  background-size: cover;
+}
+
+.explosiveFly {
+  position: absolute;
+  background-image: url(../img/explosiveFly.png);
+  background-size: cover;
+}
 
 @-webkit-keyframes splat {
     from {opacity: 1;}
@@ -37,7 +60,66 @@ html, body {
 }
 
 .splat {
-  z-index: -1;
+  position: absolute;
+  background-image: url(../img/splat.png);/*, url(../img/fly.png);*/
+  background-size: cover;
+
+  animation:splat 3s 1;
+  -webkit-animation:splat 3s 1;
+  animation-fill-mode: forwards;  
+  -webkit-animation-fill-mode: forwards;
+}
+
+
+/*
+ * todo: There has to be a better way to do this...
+ */
+ 
+.explosiveFly.splat {
+  position: absolute;
+  background-image: url(../img/splat.png), url(../img/explosiveFly.png);
+  background-size: cover;
+
+  animation:splat 3s 1;
+  -webkit-animation:splat 3s 1;
+  animation-fill-mode: forwards;  
+  -webkit-animation-fill-mode: forwards;
+}
+
+.fastFly.splat {
+  position: absolute;
+  background-image: url(../img/splat.png), url(../img/fastFly.png);
+  background-size: cover;
+
+  animation:splat 3s 1;
+  -webkit-animation:splat 3s 1;
+  animation-fill-mode: forwards;  
+  -webkit-animation-fill-mode: forwards;
+}
+
+.poisonFly.splat {
+  position: absolute;
+  background-image: url(../img/splat.png), url(../img/poisonFly.png);
+  background-size: cover;
+
+  animation:splat 3s 1;
+  -webkit-animation:splat 3s 1;
+  animation-fill-mode: forwards;  
+  -webkit-animation-fill-mode: forwards;
+}
+
+.bigFly.splat {
+  position: absolute;
+  background-image: url(../img/splat.png), url(../img/bigFly.png);
+  background-size: cover;
+
+  animation:splat 3s 1;
+  -webkit-animation:splat 3s 1;
+  animation-fill-mode: forwards;  
+  -webkit-animation-fill-mode: forwards;
+}
+
+.fly.splat {
   position: absolute;
   background-image: url(../img/splat.png), url(../img/fly.png);
   background-size: cover;
@@ -47,6 +129,10 @@ html, body {
   animation-fill-mode: forwards;  
   -webkit-animation-fill-mode: forwards;
 }
+
+/*
+ * end of todo
+ */
 
 .fullscreen {
   position: absolute;

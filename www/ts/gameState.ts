@@ -46,9 +46,10 @@ class GameState extends State{
 
         var instance = GameState.Instance();
         instance.app = app;
-        for (var f = 0; f < instance.numOfFlies; f++) {
+        /*for (var f = 0; f < instance.numOfFlies; f++) {
             instance.flies.push(FlyFactory.CreateFly(instance.currentLevel));
-        }
+        }*/
+        instance.flies = FlyFactory.CreateFliesForLevel(1);
 
         this.levelDiv.innerHTML = this.currentLevel.toString();
 
