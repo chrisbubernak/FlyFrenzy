@@ -70,7 +70,17 @@
         }
 
         function initAds() {
-            var bannerId = "ca-app-pub-8670772325508169/8169230735";
+            var android = "ca-app-pub-8670772325508169/8169230735";
+            var wp8 = "ca-app-pub-8670772325508169/4310780735";
+            var ios = ""; // just in case we support ios some day...
+            var bannerId = "";
+            if( /(android)/i.test(navigator.userAgent) ) {
+                bannerId = android;
+            } else if(/(iphone|ipad)/i.test(navigator.userAgent)) {
+                bannerId = ios;
+            } else {
+                bannerId = wp8;
+            }
             window.plugins.AdMob.setOptions( {
                 publisherId: bannerId,
                 bannerAtTop: false, // set to true, to put banner at top

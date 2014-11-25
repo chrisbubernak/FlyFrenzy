@@ -3,6 +3,10 @@ var fs = require("fs");
 var tsSrc = "www/ts/";
 var jsDest = "www/js/";
 
+var releaseFolder = "releaseBuilds\\"
+var wp8Build = "FlyFrenzy.xap";
+var androidBuild = "FlyFrenzy.apk";
+
 desc('This is the default task.');
 task('default', [], function (params) {
   console.log('No Default task defined');
@@ -10,16 +14,51 @@ task('default', [], function (params) {
 
 desc('Build Android Release');
 task('android', [], function (params) {
-  console.log('Building Android Phone Release...');
-  console.log('Signing Android Release APK...');
-  console.log('Byte Aligning Android Release APK...');
-  console.log('NOT IMPLEMENTED');
+	var path = ".\\platforms\\android\\ant-build\\CordovaApp-release-unsigned.apk";
+	var alignedPath = ".\\platforms\\android\\ant-build\\" + androidBuild;
+
+	console.log("Deleting old build");
+	var cmd = ['if exist ' + releaseFolder + androidBuild + ' del ' + releaseFolder + androidBuild];
+	jake.exec(cmd, {printStdout: true}, function () {
+		complete();
+	});
+
+	console.log('Building Android Phone Release...');
+	var cmd = ['cordova build --release android'];
+  	jake.exec(cmd, {printStdout: true}, function () {
+  		complete();
+  		console.log('Signing APK: Please enter password...');
+  		var cmd = ['jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore ' + path + ' alias_name'];
+    	jake.exec(cmd, {printStdout: true}, function() {
+	  		complete();
+	  		console.log('Byte Aligning APK');
+	  		var cmd = ['zipalign -v 4 ' + path + ' FlyFrenzy.apk'];
+	  		jake.exec(cmd, {printStdout: true}, function() {
+	  			complete();
+	  			console.log('Moving APK');
+	  			var cmd = ['move ' + androidBuild + ' ' + releaseFolder];
+	  			jake.exec(cmd, {printStdout: true}, function() {
+	  				complete();
+	  				console.log('Successfully built, signed, aligned, and moved APK to release folder!');
+	  			});
+	  		});
+		});
+  	}); 
 });
 
 desc('Build Release Windows Phone');
 task('wp8', [], function (params) {
-  console.log('Building Windows Phone Release');
-  console.log('NOT IMPLEMENTED');
+	console.log('Building Windows Phone Release');
+	var path = ".\\platforms\\wp8\\Bin\\Release\\CordovaAppProj_Release_AnyCPU.xap";
+	var cmd = ['cordova build --release wp8'];
+  	jake.exec(cmd, {printStdout: true}, function () {
+  		complete();
+  		var cmd = ['move ' + path + ' ' + releaseFolder + wp8Build];
+    	jake.exec(cmd, {printStdout: true}, function() {
+	  		complete();
+	  		console.log('Successfully compiled and moved XAP package to release folder!');
+		});
+  	}); 
 });
 
 desc('Compiles TS files into JS');
