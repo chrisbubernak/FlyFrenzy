@@ -164,6 +164,7 @@ html, body {
 .centered {
   width: 65vw;
   margin: auto;
+  text-align: center;
 }
 
 
@@ -186,17 +187,18 @@ html, body {
   color: white;
   margin-bottom: 20px;
   font-size: 30px;
-  font-family: "flyFont";
+  font-family: "helvetica";
 }
 
 .title {
   width: 100%;
   text-align: center;
-  color: white;
-  margin-top: 20px;
+  margin-top: 60px;
   margin-bottom: 20px;
-  font-size: 70px;
-  font-family: "flyFont";
+}
+
+.firstButton {
+  margin-top: 50px;
 }
 
 .menuFly {

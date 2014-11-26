@@ -21,12 +21,10 @@
         <div class="background transparent fullscreen">
         </div>
         <div class="fullscreen">
-            <div class="title">Fly Frenzy<div>
-
             <div class="centered">
+                <img class="title" src="img/title.png"/>
                 <img class= "menuFly" src="img/fly.png"/>
-                <br>
-                <div id="startButton" class="button">Start</div>
+                <div id="startButton" class="button firstButton">Start</div>
                 <div id="highScoresButton" class="button">High Scores</div>
                 <div id="aboutButton" class="button">About</div>
             </div>
@@ -46,7 +44,7 @@
     <script src="js/game/fly.js"></script>
     <script src="js/game/flyFactory.js"></script>
     <script>
-        var app;
+        var app = new App();
         function deviceReady() {
             app = new App();
             document.addEventListener(
