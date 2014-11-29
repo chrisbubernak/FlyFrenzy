@@ -20,12 +20,23 @@ class FlyFactory {
 
 	public static CreateFliesForLevel(level: number): Fly[] {
 		var flies = [];
-		for (var i = 0; i < 3; i++) {
-			flies.push(FlyFactory.CreateFastFly());
+		for (var i = 0; i < 8; i++) {
 			flies.push(FlyFactory.CreateRegularFly());
+		}
+
+		for (var i = 0; i < Math.floor(level / 3); i++) {
+			flies.push(FlyFactory.CreateFastFly());
+		}
+
+		for (var i = 0; i < (Math.floor(level / 3) + 1); i++) {
 			flies.push(FlyFactory.CreatePoisonFly());
+
+		}
+
+		for (var i = 0; i < (Math.floor(level / 3) + 2); i++) {
 			flies.push(FlyFactory.CreateBigFly());
 		}
+
 		return flies;
 	}
 
@@ -38,7 +49,7 @@ class FlyFactory {
 
 	public static CreateFastFly(): Fly {
 		var width = GameState.Instance().maxLeft / 6;
-		var moveSpeed = GameState.Instance().maxLeft / 60;
+		var moveSpeed = GameState.Instance().maxLeft / 40;
 		var fly = new Fly(width, moveSpeed, 1, "fastFly");
 		return fly;
 	}
