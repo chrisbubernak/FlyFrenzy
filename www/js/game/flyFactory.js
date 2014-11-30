@@ -23,15 +23,15 @@ var FlyFactory = (function () {
             flies.push(FlyFactory.CreateRegularFly());
         }
 
-        for (var i = 0; i < Math.floor(level / 3); i++) {
+        for (var i = 0; i < Math.floor((level + 1) / 3); i++) {
             flies.push(FlyFactory.CreateFastFly());
         }
 
-        for (var i = 0; i < (Math.floor(level / 3) + 1); i++) {
+        for (var i = 0; i < (Math.floor((level) / 3)); i++) {
             flies.push(FlyFactory.CreatePoisonFly());
         }
 
-        for (var i = 0; i < (Math.floor(level / 3) + 2); i++) {
+        for (var i = 0; i < (Math.floor((level - 1) / 3)); i++) {
             flies.push(FlyFactory.CreateBigFly());
         }
 
