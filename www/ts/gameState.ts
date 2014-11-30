@@ -13,7 +13,7 @@ class GameState extends State{
     private gameLoopCounter: number = 0;
     private fps: number = 20;
     private flies: Fly[];
-    private numOfFlies: number = 8;
+    private remainingToKill: number;
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
     private levelDiv: HTMLElement = document.getElementById("levelCounter");
     private stateName: string = "gameState";
@@ -48,6 +48,14 @@ class GameState extends State{
         instance.app = app;
 
         instance.flies = FlyFactory.CreateFliesForLevel(instance.currentLevel);
+        this.remainingToKill = instance.flies.length;
+        // figure out how many flies actually need to be killed to beat the level
+        // poisoned ones don't count!
+        for (var i = 0; i < instance.flies.length; i++) {
+            if (instance.flies[i].type === "poisonFly") {
+                this.remainingToKill--;
+            }
+        }
 
         this.levelDiv.innerHTML = this.currentLevel.toString();
 
@@ -133,15 +141,7 @@ class GameState extends State{
     }
 
     private remainingFlies() {
-        // todo: instead of recalc every time we know how many poisons there are at the start
-        // so just subtract them from the starting counting
-        var remaining: number = 0;
-        for (var i = 0; i < this.flies.length; i++) {
-            if (this.flies[i].type !== "poisonFly") {
-                remaining++;
-            }
-        }
-        return remaining;
+        return this.remainingToKill;
     }
 
     private updateTime() {
@@ -158,6 +158,7 @@ class GameState extends State{
             } else {
                 fly.die();
                 instance.flies.splice(f, 1);
+                instance.remainingToKill--;
                 if (fly.type === "poisonFly") {
                     clearInterval(instance.intervalId);
                         (<any>navigator).notification.confirm(
@@ -166,6 +167,7 @@ class GameState extends State{
                         "Game Over!",            
                         ["Try Again", "Exit"]  
                     );
+                    return;
                 }
             }
         }

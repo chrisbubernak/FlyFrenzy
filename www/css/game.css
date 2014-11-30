@@ -168,6 +168,15 @@ html, body {
 }
 
 
+.gameText {
+  color: white;
+  font-family: "helvetica";
+  font-size: 1.25em;
+}
+
+.inline {
+  display: inline-block;
+}
 
 /*
  * HOME CSS

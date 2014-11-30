@@ -20,7 +20,6 @@ var GameState = (function (_super) {
         this.timeCounter = this.startTime;
         this.gameLoopCounter = 0;
         this.fps = 20;
-        this.numOfFlies = 8;
         this.timeDiv = document.getElementById("timeCounter");
         this.levelDiv = document.getElementById("levelCounter");
         this.stateName = "gameState";
@@ -51,6 +50,13 @@ var GameState = (function (_super) {
         instance.app = app;
 
         instance.flies = FlyFactory.CreateFliesForLevel(instance.currentLevel);
+        this.remainingToKill = instance.flies.length;
+
+        for (var i = 0; i < instance.flies.length; i++) {
+            if (instance.flies[i].type === "poisonFly") {
+                this.remainingToKill--;
+            }
+        }
 
         this.levelDiv.innerHTML = this.currentLevel.toString();
 
@@ -131,15 +137,16 @@ var GameState = (function (_super) {
     };
 
     GameState.prototype.remainingFlies = function () {
+        return this.remainingToKill;
         // todo: instead of recalc every time we know how many poisons there are at the start
         // so just subtract them from the starting counting
-        var remaining = 0;
+        /*var remaining: number = 0;
         for (var i = 0; i < this.flies.length; i++) {
-            if (this.flies[i].type !== "poisonFly") {
-                remaining++;
-            }
+        if (this.flies[i].type !== "poisonFly") {
+        remaining++;
         }
-        return remaining;
+        }
+        return remaining;*/
     };
 
     GameState.prototype.updateTime = function () {
@@ -156,9 +163,11 @@ var GameState = (function (_super) {
             } else {
                 fly.die();
                 instance.flies.splice(f, 1);
+                instance.remainingToKill--;
                 if (fly.type === "poisonFly") {
                     clearInterval(instance.intervalId);
                     navigator.notification.confirm("You got poisoned!", instance.levelFailedDialog, "Game Over!", ["Try Again", "Exit"]);
+                    return;
                 }
             }
         }
