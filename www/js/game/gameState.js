@@ -20,7 +20,6 @@ var GameState = (function (_super) {
         this.timeCounter = this.startTime;
         this.gameLoopCounter = 0;
         this.fps = 20;
-        this.numOfFlies = 8;
         this.timeDiv = document.getElementById("timeCounter");
         this.levelDiv = document.getElementById("levelCounter");
         this.stateName = "gameState";
@@ -49,8 +48,14 @@ var GameState = (function (_super) {
 
         var instance = GameState.Instance();
         instance.app = app;
-        for (var f = 0; f < instance.numOfFlies; f++) {
-            instance.flies.push(FlyFactory.CreateFly(instance.currentLevel));
+
+        instance.flies = FlyFactory.CreateFliesForLevel(instance.currentLevel);
+        this.remainingToKill = instance.flies.length;
+
+        for (var i = 0; i < instance.flies.length; i++) {
+            if (instance.flies[i].type === "poisonFly") {
+                this.remainingToKill--;
+            }
         }
 
         this.levelDiv.innerHTML = this.currentLevel.toString();
@@ -59,6 +64,10 @@ var GameState = (function (_super) {
     };
 
     GameState.prototype.Exit = function (app) {
+        // clear this if it hasn't been yet
+        var instance = GameState.Instance();
+        clearInterval(instance.intervalId);
+
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             html[i].style.display = "none";
@@ -86,7 +95,7 @@ var GameState = (function (_super) {
         app.ChangeState(HomeState.Instance());
     };
 
-    GameState.prototype.timeUpDialog = function (index) {
+    GameState.prototype.levelFailedDialog = function (index) {
         //index 1 = Try Again, 2 = Exit, 0 = no button
         var instance = GameState.Instance();
         if (index === 1) {
@@ -123,8 +132,12 @@ var GameState = (function (_super) {
         if (this.timeCounter === 0 && this.flies.length > 0) {
             var instance = GameState.Instance();
             clearInterval(instance.intervalId);
-            navigator.notification.confirm(instance.flies.length + " flies remaining.", this.timeUpDialog, "Game Over", ["Try Again", "Exit"]);
+            navigator.notification.confirm(instance.remainingFlies() + " flies remaining.", this.levelFailedDialog, "Game Over", ["Try Again", "Exit"]);
         }
+    };
+
+    GameState.prototype.remainingFlies = function () {
+        return this.remainingToKill;
     };
 
     GameState.prototype.updateTime = function () {
@@ -141,10 +154,16 @@ var GameState = (function (_super) {
             } else {
                 fly.die();
                 instance.flies.splice(f, 1);
+                instance.remainingToKill--;
+                if (fly.type === "poisonFly") {
+                    clearInterval(instance.intervalId);
+                    navigator.notification.confirm("You got poisoned!", instance.levelFailedDialog, "Game Over!", ["Try Again", "Exit"]);
+                    return;
+                }
             }
         }
 
-        if (instance.flies.length === 0) {
+        if (instance.remainingFlies() === 0) {
             clearInterval(instance.intervalId);
             navigator.notification.confirm("Level Completed", instance.levelCompleteDialog, "Great Job!", ["Next Level", "Exit"]);
         }

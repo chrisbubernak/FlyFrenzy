@@ -13,7 +13,7 @@ class GameState extends State{
     private gameLoopCounter: number = 0;
     private fps: number = 20;
     private flies: Fly[];
-    private numOfFlies: number = 8;
+    private remainingToKill: number;
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
     private levelDiv: HTMLElement = document.getElementById("levelCounter");
     private stateName: string = "gameState";
@@ -46,8 +46,15 @@ class GameState extends State{
 
         var instance = GameState.Instance();
         instance.app = app;
-        for (var f = 0; f < instance.numOfFlies; f++) {
-            instance.flies.push(FlyFactory.CreateFly(instance.currentLevel));
+
+        instance.flies = FlyFactory.CreateFliesForLevel(instance.currentLevel);
+        this.remainingToKill = instance.flies.length;
+        // figure out how many flies actually need to be killed to beat the level
+        // poisoned ones don't count!
+        for (var i = 0; i < instance.flies.length; i++) {
+            if (instance.flies[i].type === "poisonFly") {
+                this.remainingToKill--;
+            }
         }
 
         this.levelDiv.innerHTML = this.currentLevel.toString();
@@ -56,6 +63,10 @@ class GameState extends State{
     }
 
     public Exit(app: App) {
+        // clear this if it hasn't been yet
+        var instance = GameState.Instance();
+        clearInterval(instance.intervalId);
+
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             (<HTMLDivElement>html[i]).style.display = "none";
@@ -83,7 +94,7 @@ class GameState extends State{
         app.ChangeState(HomeState.Instance());
     }
 
-    private timeUpDialog(index: number) {
+    private levelFailedDialog(index: number) {
         //index 1 = Try Again, 2 = Exit, 0 = no button
         var instance = GameState.Instance();
         if (index === 1) {
@@ -121,12 +132,16 @@ class GameState extends State{
             var instance = GameState.Instance();
             clearInterval(instance.intervalId);
             (<any>navigator).notification.confirm(
-                instance.flies.length + " flies remaining." ,
-                this.timeUpDialog,
+                instance.remainingFlies() + " flies remaining." ,
+                this.levelFailedDialog,
                 "Game Over",            
                 ["Try Again", "Exit"]  
             );
         }
+    }
+
+    private remainingFlies() {
+        return this.remainingToKill;
     }
 
     private updateTime() {
@@ -143,10 +158,21 @@ class GameState extends State{
             } else {
                 fly.die();
                 instance.flies.splice(f, 1);
+                instance.remainingToKill--;
+                if (fly.type === "poisonFly") {
+                    clearInterval(instance.intervalId);
+                        (<any>navigator).notification.confirm(
+                        "You got poisoned!",
+                        instance.levelFailedDialog,
+                        "Game Over!",            
+                        ["Try Again", "Exit"]  
+                    );
+                    return;
+                }
             }
         }
 
-        if (instance.flies.length === 0) {
+        if (instance.remainingFlies() === 0) {
             clearInterval(instance.intervalId);
             (<any>navigator).notification.confirm(
                 "Level Completed",

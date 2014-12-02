@@ -1,3 +1,5 @@
 platforms/
-
-Thumbs.db
+my-release-key.keystore
+releaseBuilds/*
+www/img/Thumbs.db
+releaseImages/Thumbs.db

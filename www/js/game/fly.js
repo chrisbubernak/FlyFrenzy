@@ -1,9 +1,10 @@
 ﻿/// <reference path="gameState.ts"/>
 var Fly = (function () {
-    function Fly(width, moveSpeed, totalHealth) {
+    function Fly(width, moveSpeed, totalHealth, type) {
         this.id = Fly.count;
         Fly.count++;
 
+        this.type = type;
         this.width = width;
         this.height = this.width;
         this.moveSpeed = moveSpeed;
@@ -61,6 +62,7 @@ var Fly = (function () {
         div.style.width = this.width + "px";
         div.style.height = this.height + "px";
         div.classList.add("splat");
+        div.classList.add(this.type);
         div.classList.add("gameStateTemporary");
         document.body.appendChild(div);
 
@@ -75,7 +77,7 @@ var Fly = (function () {
         div.style.left = x + "px";
         div.style.width = this.width + "px";
         div.style.height = this.height + "px";
-        div.classList.add("fly");
+        div.classList.add(this.type);
         div.classList.add("gameStateTemporary");
         var that = this;
 
