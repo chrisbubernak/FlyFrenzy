@@ -25,12 +25,29 @@
                 <img class="title" src="img/title.png"/>
                 <img class= "menuFly" src="img/fly.png"/>
                 <div id="startButton" class="button firstButton">Start</div>
-                <div id="highScoresButton" class="button">High Scores</div>
+                <div id="highScoreButton" class="button">High Scores</div>
                 <div id="aboutButton" class="button">About</div>
             </div>
         </div>
     </div>
-
+    <div class="highScoreState">
+        <div class="background transparent fullscreen">
+        </div>
+        <div class="fullscreen">
+            <div class="centered">
+                High Scores!
+            </div>
+        </div>
+    </div>
+    <div class="aboutState">
+        <div class="background transparent fullscreen">
+        </div>
+        <div class="fullscreen">
+            <div class="centered">
+            About!
+            </div>
+        </div>
+    </div>
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>
     <!--<script src="scripts/platformOverrides.js"></script>-->
@@ -41,10 +58,12 @@
     <script src="js/game/state.js"></script>
     <script src="js/game/homeState.js"></script>
     <script src="js/game/gameState.js"></script>
+    <script src="js/game/highScoreState.js"></script>
+    <script src="js/game/aboutState.js"></script>
     <script src="js/game/fly.js"></script>
     <script src="js/game/flyFactory.js"></script>
     <script>
-        var app;
+        var app = new App();
         function deviceReady() {
             app = new App();
             document.addEventListener(

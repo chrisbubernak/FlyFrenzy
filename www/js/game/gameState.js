@@ -138,15 +138,6 @@ var GameState = (function (_super) {
 
     GameState.prototype.remainingFlies = function () {
         return this.remainingToKill;
-        // todo: instead of recalc every time we know how many poisons there are at the start
-        // so just subtract them from the starting counting
-        /*var remaining: number = 0;
-        for (var i = 0; i < this.flies.length; i++) {
-        if (this.flies[i].type !== "poisonFly") {
-        remaining++;
-        }
-        }
-        return remaining;*/
     };
 
     GameState.prototype.updateTime = function () {
