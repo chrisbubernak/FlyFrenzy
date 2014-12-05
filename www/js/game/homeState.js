@@ -1,6 +1,8 @@
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
 /// <reference path="gameState.ts"/>
+/// <reference path="aboutState.ts"/>
+/// <reference path="highScoreState.ts"/>
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -29,6 +31,16 @@ var HomeState = (function (_super) {
         var startButton = document.getElementById("startButton");
         startButton.onclick = function () {
             app.ChangeState(GameState.Instance());
+        };
+
+        var highScoreButton = document.getElementById("highScoreButton");
+        highScoreButton.onclick = function () {
+            app.ChangeState(HighScoreState.Instance());
+        };
+
+        var aboutButton = document.getElementById("aboutButton");
+        aboutButton.onclick = function () {
+            app.ChangeState(AboutState.Instance());
         };
     };
 

@@ -1,6 +1,8 @@
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
 /// <reference path="gameState.ts"/>
+/// <reference path="aboutState.ts"/>
+/// <reference path="highScoreState.ts"/>
 
 class HomeState extends State {
 	private static instance: HomeState;
@@ -21,6 +23,12 @@ class HomeState extends State {
 
         var startButton = <any>document.getElementById("startButton");
         startButton.onclick = function() { app.ChangeState(GameState.Instance()); };
+
+        var highScoreButton = <any>document.getElementById("highScoreButton");
+        highScoreButton.onclick = function() { app.ChangeState(HighScoreState.Instance()); };
+
+        var aboutButton = <any>document.getElementById("aboutButton");
+        aboutButton.onclick = function() { app.ChangeState(AboutState.Instance()); };
     }
 
     public Exit(app: App) {

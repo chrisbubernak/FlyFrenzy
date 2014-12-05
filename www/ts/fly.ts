@@ -3,6 +3,7 @@
 class Fly {
     static count: number = 0;
     id: number;
+    type: string;
     width: number;
     height: number;
     totalHealth: number;
@@ -11,10 +12,11 @@ class Fly {
     moveSpeed: number;
     angle: number;
 
-    constructor(width: number, moveSpeed: number, totalHealth: number) {
+    constructor(width: number, moveSpeed: number, totalHealth: number, type: string) {
         this.id = Fly.count;
         Fly.count++;
 
+        this.type = type;
         this.width = width;
         this.height = this.width;
         this.moveSpeed = moveSpeed;
@@ -74,6 +76,7 @@ class Fly {
         div.style.width = this.width + "px";
         div.style.height = this.height + "px";
         div.classList.add("splat");
+        div.classList.add(this.type);
         div.classList.add("gameStateTemporary");
         document.body.appendChild(div);
 
@@ -89,7 +92,7 @@ class Fly {
         div.style.left = x + "px";
         div.style.width = this.width + "px";
         div.style.height = this.height + "px";
-        div.classList.add("fly");
+        div.classList.add(this.type);
         div.classList.add("gameStateTemporary");
         var that: Fly = this;
 
