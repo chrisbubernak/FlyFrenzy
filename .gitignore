@@ -1,4 +1,5 @@
 platforms/
+plugins/
 my-release-key.keystore
 releaseBuilds/
 Thumbs.db

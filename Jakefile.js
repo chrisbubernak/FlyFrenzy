@@ -7,9 +7,48 @@ var releaseFolder = "releaseBuilds\\"
 var wp8Build = "FlyFrenzy.xap";
 var androidBuild = "FlyFrenzy.apk";
 
+var pluginCmds = [
+	'cordova plugin add com.google.admobsdk',
+	'cordova plugin add com.google.playservices',
+	'cordova plugin add com.rjfun.cordova.plugin.admob',
+	'cordova plugin add org.apache.cordova.dialogs',
+	'cordova plugin add org.apache.cordova.vibration'
+];
+
+
 desc('This is the default task.');
 task('default', [], function (params) {
   console.log('No Default task defined');
+});
+
+desc('Initializes the project.');
+task('init', [], function(params) {
+	console.log("Deleting old folders");
+	var deleteCmds = [
+		'if exist platforms rmdir /s /q platforms',
+		'if exist plugins rmdir /s /q plugins',
+		'if exist releaseBuilds rmdir /s /q releaseBuilds'
+	];
+	jake.exec(deleteCmds, {printStdout: true}, function () {
+		complete();
+		console.log('adding platforms...');
+		var androidPlatform = "cordova platform add android";
+		var wp8Platform = "cordova platform add wp8";
+		var platformCmds = [androidPlatform, wp8Platform];
+		jake.exec(platformCmds, {printStdout: true}, function () {
+			complete();
+			console.log('adding plugins...');
+			jake.exec(pluginCmds, {printStdout: true}, function () {
+				complete();
+			});
+		});
+
+		var cmd = ['mkdir releaseBuilds'];
+		console.log('creating release build folder...');
+		jake.exec(cmd, {printStdout: true}, function () {
+			complete();
+		});	
+	});
 });
 
 desc('Build Android Release');

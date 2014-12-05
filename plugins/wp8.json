@@ -5,24 +5,6 @@
     },
     "config_munge": {
         "files": {
-            "config.xml": {
-                "parents": {
-                    "/*": [
-                        {
-                            "xml": "<feature name=\"Vibration\"><param name=\"wp-package\" value=\"Vibration\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"Notification\"><param name=\"wp-package\" value=\"Notification\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"AdMob\"><param name=\"wp-package\" value=\"AdMob\" /></feature>",
-                            "count": 1
-                        }
-                    ]
-                }
-            },
             "Properties/WMAppManifest.xml": {
                 "parents": {
                     "/Deployment/App/Capabilities": [
@@ -32,23 +14,43 @@
                         }
                     ]
                 }
+            },
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"AdMob\"><param name=\"wp-package\" value=\"AdMob\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Notification\"><param name=\"wp-package\" value=\"Notification\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Vibration\"><param name=\"wp-package\" value=\"Vibration\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
             }
         }
     },
     "installed_plugins": {
-        "org.apache.cordova.vibration": {
-            "PACKAGE_NAME": "{22277e20-5bd6-11e4-ad6f-c59e295adf24}"
+        "com.google.admobsdk": {
+            "PACKAGE_NAME": "{cbede700-7c88-11e4-a75a-0f1691a87256}"
         },
-        "org.apache.cordova.dialogs": {
-            "PACKAGE_NAME": "{22277e20-5bd6-11e4-ad6f-c59e295adf24}"
+        "com.google.playservices": {
+            "PACKAGE_NAME": "{cbede700-7c88-11e4-a75a-0f1691a87256}"
         },
         "com.rjfun.cordova.plugin.admob": {
-            "PACKAGE_NAME": "{22277e20-5bd6-11e4-ad6f-c59e295adf24}"
+            "PACKAGE_NAME": "{cbede700-7c88-11e4-a75a-0f1691a87256}"
+        },
+        "org.apache.cordova.dialogs": {
+            "PACKAGE_NAME": "{cbede700-7c88-11e4-a75a-0f1691a87256}"
+        },
+        "org.apache.cordova.vibration": {
+            "PACKAGE_NAME": "{cbede700-7c88-11e4-a75a-0f1691a87256}"
         }
     },
-    "dependent_plugins": {
-        "com.google.admobsdk": {
-            "PACKAGE_NAME": "{22277e20-5bd6-11e4-ad6f-c59e295adf24}"
-        }
-    }
+    "dependent_plugins": {}
 }
