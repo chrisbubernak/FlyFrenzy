@@ -3,7 +3,9 @@ FlyFrenzy
 
 A mobile game written in TypeScript using Cordova framework for Android and Windows Phone. Please contact me if you'd like to get access to the private alpha & beta releases.
 
-11/24/2014 - Update: Deployed alpha version 0.0.0.8 to the Google Play & Windows Phone store (added support for in game ads to pay the bills).
+12/5/2014 - Update: Deployed alpha version 0.0.0.9 to the Google Play & Windows Phone Store (added different types of flies)
+
+11/24/2014 - Deployed alpha version 0.0.0.8 to the Google Play & Windows Phone store (added support for in game ads to pay the bills).
 
 11/22/2014 - Deployed alpha version 0.0.0.7 to the Google Play & Windows Phone store.
 
