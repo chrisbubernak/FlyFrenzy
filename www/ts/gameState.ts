@@ -1,4 +1,5 @@
 ﻿/// <reference path="fly.ts"/>
+/// <reference path="target.ts"/>
 /// <reference path="flyFactory.ts"/>
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
@@ -60,6 +61,11 @@ class GameState extends State{
         this.levelDiv.innerHTML = this.currentLevel.toString();
 
         instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
+
+        var backgroundDiv = document.getElementById("gameStateBackground");
+        backgroundDiv.onclick = function (event) {
+            instance.ClickHandler(event);
+        };
     }
 
     public Exit(app: App) {
@@ -76,6 +82,10 @@ class GameState extends State{
         for (var i = temporaryDivs.length-1; i >= 0; i--) {
             (<HTMLDivElement>temporaryDivs[i]).parentNode.removeChild(temporaryDivs[i]);
         }
+
+
+        var backgroundDiv = document.getElementById("gameStateBackground");
+        backgroundDiv.onclick = null;
     }
 
     public OnPause(app: App) {
@@ -92,6 +102,10 @@ class GameState extends State{
 
     public OnBack(app: App) {
         app.ChangeState(HomeState.Instance());
+    }
+
+    public ClickHandler(event) {
+        var target = new Target(event.x, event.y);
     }
 
     private levelFailedDialog(index: number) {

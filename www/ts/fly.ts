@@ -98,10 +98,10 @@ class Fly {
 
         // todo: we probably don't need a new copy of this function for each fly
         // this should be refactored out at some point
-        div.onclick = function () {
+        div.onclick = function (event) {
             that.healthRemaining--;
-            // todo: add some sort of blood/squash animation
             (<any>navigator).vibrate(50);
+            GameState.Instance().ClickHandler(event);
         };
         document.body.appendChild(div);
         return div;

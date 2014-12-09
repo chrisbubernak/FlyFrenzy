@@ -9,7 +9,7 @@
 
 </head>
 <body>
-    <div class="gameState background fullscreen">
+    <div id="gameStateBackground" class="gameState background fullscreen">
         <div id="timeContainer" class ="gameText">
             <div class="inline">Time: </div><div class="inline" id="timeCounter"></div>
         </div>
@@ -62,6 +62,7 @@
     <script src="js/game/aboutState.js"></script>
     <script src="js/game/fly.js"></script>
     <script src="js/game/flyFactory.js"></script>
+    <script src="js/game/target.js"></script>
     <script>
         var app = new App();
         function deviceReady() {
@@ -101,7 +102,7 @@
             window.plugins.AdMob.setOptions( {
                 publisherId: bannerId,
                 bannerAtTop: false, // set to true, to put banner at top
-                overlap: true, // set to true, to allow banner overlap webview
+                overlap: false, // set to true, to allow banner overlap webview
                 offsetTopBar: false, // set to true to avoid ios7 status bar overlap
                 isTesting: false, // receiving test ad
                 autoShow: true // auto show interstitial ad when loaded
