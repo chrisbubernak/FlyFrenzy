@@ -133,27 +133,9 @@ html, body {
   display: inline-block;
 }
 
-@-webkit-keyframes target {
-    from {opacity: 1;}
-    to {opacity: 0;}
-}
-@keyframes target {
-    from {opacity: 1;}
-    to {opacity: 0;}
-}
-
 .target {
   position: absolute;
-  background-image: url(../img/target.png);
-  background-size: cover;
-  border-radius: 50%;
-  animation:target 3s 1;
-  transition-property: width, height;
-  -webkit-animation:target 3s 1;
-  animation-fill-mode: forwards;  
-  -webkit-animation-fill-mode: forwards;
 }
-
 
 .fly {
   position: absolute;

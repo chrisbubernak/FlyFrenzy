@@ -14,6 +14,7 @@ class GameState extends State{
     private gameLoopCounter: number = 0;
     private fps: number = 20;
     private flies: Fly[];
+    private targets: Target[];
     private remainingToKill: number;
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
     private levelDiv: HTMLElement = document.getElementById("levelCounter");
@@ -36,7 +37,7 @@ class GameState extends State{
         this.timeCounter = this.startTime;
         this.gameLoopCounter = 0;
         this.flies = [];
-
+        this.targets = [];
 
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
@@ -105,7 +106,7 @@ class GameState extends State{
     }
 
     public ClickHandler(event) {
-        var target = new Target(event.x, event.y);
+        GameState.Instance().targets.push(new Target(event.x, event.y));
     }
 
     private levelFailedDialog(index: number) {
@@ -183,6 +184,15 @@ class GameState extends State{
                     );
                     return;
                 }
+            }
+        }
+
+        for (var t = instance.targets.length - 1; t >= 0; t--) {
+            var target = instance.targets[t];
+            target.update();
+            if (target.isExpired()) {
+                instance.targets[t].destroy();
+                instance.targets.splice(t, 1);
             }
         }
 

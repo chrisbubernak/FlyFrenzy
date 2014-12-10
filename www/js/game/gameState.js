@@ -39,6 +39,7 @@ var GameState = (function (_super) {
         this.timeCounter = this.startTime;
         this.gameLoopCounter = 0;
         this.flies = [];
+        this.targets = [];
 
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
@@ -105,7 +106,7 @@ var GameState = (function (_super) {
     };
 
     GameState.prototype.ClickHandler = function (event) {
-        var target = new Target(event.x, event.y);
+        GameState.Instance().targets.push(new Target(event.x, event.y));
     };
 
     GameState.prototype.levelFailedDialog = function (index) {
@@ -173,6 +174,15 @@ var GameState = (function (_super) {
                     navigator.notification.confirm("You got poisoned!", instance.levelFailedDialog, "Game Over!", ["Try Again", "Exit"]);
                     return;
                 }
+            }
+        }
+
+        for (var t = instance.targets.length - 1; t >= 0; t--) {
+            var target = instance.targets[t];
+            target.update();
+            if (target.isExpired()) {
+                instance.targets[t].destroy();
+                instance.targets.splice(t, 1);
             }
         }
 
