@@ -66,7 +66,8 @@ var Fly = (function () {
         div.classList.add("gameStateTemporary");
         document.body.appendChild(div);
 
-        this.div.parentNode.removeChild(this.div); // remove the html element
+        // remove the html element
+        this.div.parentNode.removeChild(this.div);
         navigator.vibrate(150);
     };
 
@@ -81,13 +82,7 @@ var Fly = (function () {
         div.classList.add("gameStateTemporary");
         var that = this;
 
-        // todo: we probably don't need a new copy of this function for each fly
-        // this should be refactored out at some point
-        /*div.onclick = function (event) {
-        that.healthRemaining--;
-        (<any>navigator).vibrate(50);
-        GameState.Instance().ClickHandler(event);
-        };*/
+        // todo: are these event listeners getting cleaned up??? need to investigate
         div.addEventListener("touchstart", GameState.Instance().handleTouch, false);
 
         document.body.appendChild(div);

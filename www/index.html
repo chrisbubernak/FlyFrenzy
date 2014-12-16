@@ -1,7 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width">
     <meta charset="utf-8" />
     <title>FlyFrenzy</title>
 
@@ -107,7 +106,7 @@
             window.plugins.AdMob.setOptions( {
                 publisherId: bannerId,
                 bannerAtTop: false, // set to true, to put banner at top
-                overlap: false, // set to true, to allow banner overlap webview
+                overlap: true, // set to true, to allow banner overlap webview
                 offsetTopBar: false, // set to true to avoid ios7 status bar overlap
                 isTesting: false, // receiving test ad
                 autoShow: true // auto show interstitial ad when loaded

@@ -66,9 +66,6 @@ class GameState extends State{
         instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
 
         var backgroundDiv = document.getElementById("gameStateBackground");
-        /*backgroundDiv.onclick = function (event) {
-            instance.ClickHandler(event);
-        };*/
         backgroundDiv.addEventListener('touchstart', this.handleTouch, false);
     }
 
@@ -89,7 +86,6 @@ class GameState extends State{
 
 
         var backgroundDiv = document.getElementById("gameStateBackground");
-        //backgroundDiv.onclick = null;
         backgroundDiv.removeEventListener("touchstart", this.handleTouch);
     }
 
@@ -110,15 +106,13 @@ class GameState extends State{
     }
 
     public ClickHandler(event) {
-        //alert(event.x + " " + event.y);
         GameState.Instance().targets.push(new Target(event.x, event.y));
     }
 
     public handleTouch(e){
         var evt = {x: (<any>e).changedTouches[0].pageX,
             y: (<any>e).changedTouches[0].pageY,
-            width: (<any>e).changedTouches[0].radiusX * 2 || Target.radius(),
-            height: (<any>e).changedTouches[0].radiusY * 2 || Target.radius()};
+            radius: Target.radius()};
         GameState.Instance().ClickHandler(evt);
         GameState.Instance().touchList.push(evt); 
     }
@@ -177,22 +171,13 @@ class GameState extends State{
         this.timeDiv.innerHTML = this.timeCounter.toString();
     }
 
-    private collides(obj1, flyObj): boolean {
-        var width: number = flyObj.width;
-        var height: number = flyObj.height;
-        var x1: number = flyObj.div.offsetLeft + width/2;
-        var y1: number = flyObj.div.offsetTop + height/2;;
-        
-        var obj2 = {x: x1, y: y1, width: width, height: height};
-        //alert(obj1.x + " " + obj1.y + " " + obj1.width + " " + obj1.height);
-        //alert(obj2.x + " " + obj2.y + " " + obj2.width + " " + obj2.height);
-        // crude collision detection
-        var r1 = (obj1.width + obj1.height) / 4;
-        var r2 = (obj2.width + obj2.height) / 4;
-        var r = r1 + r2; 
-        var x = obj1.x - obj2.x;
-        var y = obj1.y - obj2.y;
-        var r = r1 + r2;
+    private collides(touchObj, flyObj): boolean {
+        // todo: game objects should have a uniform interface so that we can just check collisions
+        // between objects instead of this special cased touchObj v flyObj check
+        var x = touchObj.x - (flyObj.div.offsetLeft + flyObj.width/2);
+        var y = touchObj.y - (flyObj.div.offsetTop + flyObj.height/2);
+        var r = touchObj.radius + (flyObj.width + flyObj.height)/4;
+
         if ((x* x) + (y * y) < r * r ) {
             return true;
         }
