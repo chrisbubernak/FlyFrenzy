@@ -29,19 +29,19 @@ var HomeState = (function (_super) {
         }
 
         var startButton = document.getElementById("startButton");
-        startButton.onclick = function () {
+        startButton.addEventListener('touchend', function () {
             app.ChangeState(GameState.Instance());
-        };
+        }, false);
 
         var highScoreButton = document.getElementById("highScoreButton");
-        highScoreButton.onclick = function () {
+        highScoreButton.addEventListener('touchend', function () {
             app.ChangeState(HighScoreState.Instance());
-        };
+        }, false);
 
         var aboutButton = document.getElementById("aboutButton");
-        aboutButton.onclick = function () {
+        aboutButton.addEventListener('touchend', function () {
             app.ChangeState(AboutState.Instance());
-        };
+        }, false);
     };
 
     HomeState.prototype.Exit = function (app) {

@@ -15,6 +15,7 @@ class GameState extends State{
     private fps: number = 20;
     private flies: Fly[];
     private targets: Target[];
+    private touchList: any[];
     private remainingToKill: number;
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
     private levelDiv: HTMLElement = document.getElementById("levelCounter");
@@ -38,6 +39,7 @@ class GameState extends State{
         this.gameLoopCounter = 0;
         this.flies = [];
         this.targets = [];
+        this.touchList = [];
 
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
@@ -64,9 +66,10 @@ class GameState extends State{
         instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
 
         var backgroundDiv = document.getElementById("gameStateBackground");
-        backgroundDiv.onclick = function (event) {
+        /*backgroundDiv.onclick = function (event) {
             instance.ClickHandler(event);
-        };
+        };*/
+        backgroundDiv.addEventListener('touchstart', this.handleTouch, false);
     }
 
     public Exit(app: App) {
@@ -86,7 +89,8 @@ class GameState extends State{
 
 
         var backgroundDiv = document.getElementById("gameStateBackground");
-        backgroundDiv.onclick = null;
+        //backgroundDiv.onclick = null;
+        backgroundDiv.removeEventListener("touchstart", this.handleTouch);
     }
 
     public OnPause(app: App) {
@@ -106,7 +110,17 @@ class GameState extends State{
     }
 
     public ClickHandler(event) {
+        //alert(event.x + " " + event.y);
         GameState.Instance().targets.push(new Target(event.x, event.y));
+    }
+
+    public handleTouch(e){
+        var evt = {x: (<any>e).changedTouches[0].pageX,
+            y: (<any>e).changedTouches[0].pageY,
+            width: (<any>e).changedTouches[0].radiusX * 2 || Target.radius(),
+            height: (<any>e).changedTouches[0].radiusY * 2 || Target.radius()};
+        GameState.Instance().ClickHandler(evt);
+        GameState.Instance().touchList.push(evt); 
     }
 
     private levelFailedDialog(index: number) {
@@ -163,11 +177,44 @@ class GameState extends State{
         this.timeDiv.innerHTML = this.timeCounter.toString();
     }
 
+    private collides(obj1, flyObj): boolean {
+        var width: number = flyObj.width;
+        var height: number = flyObj.height;
+        var x1: number = flyObj.div.offsetLeft + width/2;
+        var y1: number = flyObj.div.offsetTop + height/2;;
+        
+        var obj2 = {x: x1, y: y1, width: width, height: height};
+        //alert(obj1.x + " " + obj1.y + " " + obj1.width + " " + obj1.height);
+        //alert(obj2.x + " " + obj2.y + " " + obj2.width + " " + obj2.height);
+        // crude collision detection
+        var r1 = (obj1.width + obj1.height) / 4;
+        var r2 = (obj2.width + obj2.height) / 4;
+        var r = r1 + r2; 
+        var x = obj1.x - obj2.x;
+        var y = obj1.y - obj2.y;
+        var r = r1 + r2;
+        if ((x* x) + (y * y) < r * r ) {
+            return true;
+        }
+        return false;
+    }
+
     private run () {
         var instance = GameState.Instance();
+
+        // go through all the touches that have happened in the last game frame and check them vs all flies 
+        // O(flyCount*touchCount) runtime which isn't ideal...but might be ok for now
+        var touches = instance.touchList;
         var deadFlies: number = 0;
         for (var f = instance.flies.length - 1; f >= 0; f--) {
             var fly = instance.flies[f];
+
+            for (var t = 0; t < touches.length; t++) {
+                if (instance.collides(touches[t], fly)) {
+                    fly.clicked();
+                }
+            }
+
             if (fly.healthRemaining > 0) { 
                 fly.move();
             } else {
@@ -211,6 +258,6 @@ class GameState extends State{
             instance.gameLoopCounter = 0;
             instance.secondElapse();
         }
-
+        instance.touchList = [];
     }
 }

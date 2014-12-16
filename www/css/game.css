@@ -40,8 +40,6 @@ html, body {
   -ms-tap-highlight-color: rgba(0,0,0,0);
 }
 
-
-
 .fullscreen {
   position: absolute;
   height: 100vh;
@@ -51,6 +49,7 @@ html, body {
 .background {  
   z-index: -2;
   background-image: url(../img/background.png);
+  -webkit-background-size: cover;
   background-size: cover;
 }
 
@@ -74,14 +73,6 @@ html, body {
  * HOME CSS
  */
 
-.transparent {
-  -webkit-filter: blur(3px);
-  -moz-filter: blur(3px);
-  -o-filter: blur(3px);
-  -ms-filter: blur(3px);
-  filter: blur(3px);
-}
-
 .centered {
   width: 65vw;
   margin: auto;
@@ -101,6 +92,12 @@ html, body {
   color: white;
   margin-bottom: 20px;
   font-size: 30px;
+  font-family: "helvetica";
+}
+
+.footerText {
+  color: white;
+  font-size: 10px;
   font-family: "helvetica";
 }
 

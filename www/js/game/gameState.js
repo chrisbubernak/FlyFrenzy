@@ -40,6 +40,7 @@ var GameState = (function (_super) {
         this.gameLoopCounter = 0;
         this.flies = [];
         this.targets = [];
+        this.touchList = [];
 
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
@@ -65,9 +66,11 @@ var GameState = (function (_super) {
         instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
 
         var backgroundDiv = document.getElementById("gameStateBackground");
-        backgroundDiv.onclick = function (event) {
-            instance.ClickHandler(event);
-        };
+
+        /*backgroundDiv.onclick = function (event) {
+        instance.ClickHandler(event);
+        };*/
+        backgroundDiv.addEventListener('touchstart', this.handleTouch, false);
     };
 
     GameState.prototype.Exit = function (app) {
@@ -86,7 +89,9 @@ var GameState = (function (_super) {
         }
 
         var backgroundDiv = document.getElementById("gameStateBackground");
-        backgroundDiv.onclick = null;
+
+        //backgroundDiv.onclick = null;
+        backgroundDiv.removeEventListener("touchstart", this.handleTouch);
     };
 
     GameState.prototype.OnPause = function (app) {
@@ -106,7 +111,18 @@ var GameState = (function (_super) {
     };
 
     GameState.prototype.ClickHandler = function (event) {
+        //alert(event.x + " " + event.y);
         GameState.Instance().targets.push(new Target(event.x, event.y));
+    };
+
+    GameState.prototype.handleTouch = function (e) {
+        var evt = {
+            x: e.changedTouches[0].pageX,
+            y: e.changedTouches[0].pageY,
+            width: e.changedTouches[0].radiusX * 2 || Target.radius(),
+            height: e.changedTouches[0].radiusY * 2 || Target.radius() };
+        GameState.Instance().ClickHandler(evt);
+        GameState.Instance().touchList.push(evt);
     };
 
     GameState.prototype.levelFailedDialog = function (index) {
@@ -158,11 +174,46 @@ var GameState = (function (_super) {
         this.timeDiv.innerHTML = this.timeCounter.toString();
     };
 
+    GameState.prototype.collides = function (obj1, flyObj) {
+        var width = flyObj.width;
+        var height = flyObj.height;
+        var x1 = flyObj.div.offsetLeft + width / 2;
+        var y1 = flyObj.div.offsetTop + height / 2;
+        ;
+
+        var obj2 = { x: x1, y: y1, width: width, height: height };
+
+        //alert(obj1.x + " " + obj1.y + " " + obj1.width + " " + obj1.height);
+        //alert(obj2.x + " " + obj2.y + " " + obj2.width + " " + obj2.height);
+        // crude collision detection
+        var r1 = (obj1.width + obj1.height) / 4;
+        var r2 = (obj2.width + obj2.height) / 4;
+        var r = r1 + r2;
+        var x = obj1.x - obj2.x;
+        var y = obj1.y - obj2.y;
+        var r = r1 + r2;
+        if ((x * x) + (y * y) < r * r) {
+            return true;
+        }
+        return false;
+    };
+
     GameState.prototype.run = function () {
         var instance = GameState.Instance();
+
+        // go through all the touches that have happened in the last game frame and check them vs all flies
+        // O(flyCount*touchCount) runtime which isn't ideal...but might be ok for now
+        var touches = instance.touchList;
         var deadFlies = 0;
         for (var f = instance.flies.length - 1; f >= 0; f--) {
             var fly = instance.flies[f];
+
+            for (var t = 0; t < touches.length; t++) {
+                if (instance.collides(touches[t], fly)) {
+                    fly.clicked();
+                }
+            }
+
             if (fly.healthRemaining > 0) {
                 fly.move();
             } else {
@@ -196,6 +247,7 @@ var GameState = (function (_super) {
             instance.gameLoopCounter = 0;
             instance.secondElapse();
         }
+        instance.touchList = [];
     };
     return GameState;
 })(State);

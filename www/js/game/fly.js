@@ -1,4 +1,4 @@
-﻿/// <reference path="gameState.ts"/>
+/// <reference path="gameState.ts"/>
 var Fly = (function () {
     function Fly(width, moveSpeed, totalHealth, type) {
         this.id = Fly.count;
@@ -83,13 +83,20 @@ var Fly = (function () {
 
         // todo: we probably don't need a new copy of this function for each fly
         // this should be refactored out at some point
-        div.onclick = function (event) {
-            that.healthRemaining--;
-            navigator.vibrate(50);
-            GameState.Instance().ClickHandler(event);
-        };
+        /*div.onclick = function (event) {
+        that.healthRemaining--;
+        (<any>navigator).vibrate(50);
+        GameState.Instance().ClickHandler(event);
+        };*/
+        div.addEventListener("touchstart", GameState.Instance().handleTouch, false);
+
         document.body.appendChild(div);
         return div;
+    };
+
+    Fly.prototype.clicked = function () {
+        this.healthRemaining--;
+        navigator.vibrate(50);
     };
     Fly.count = 0;
     return Fly;

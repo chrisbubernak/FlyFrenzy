@@ -1,9 +1,9 @@
 /// <reference path="gameState.ts"/>
 
 class Target {
-	width: number = GameState.Instance().maxLeft / 12;
-	height: number = this.width;
-	borderSize: number = this.width / 10;
+	static width: number = GameState.Instance().maxLeft / 12;
+	height: number = Target.width;
+	borderSize: number = Target.width / 10;
 	type: string = "target";
 	timerStart: number = 10; // the number of frames the target is on screen before it disappears
 	timer: number = this.timerStart;
@@ -15,10 +15,14 @@ class Target {
 	   this.createTargetDiv(x, y);
 	}
 
+	public static radius() {
+		return Target.width/2; 
+	}
+
 	public update() {
 		var ratio = (this.timer/this.timerStart);
 		this.div.style.opacity = ratio.toString();
-		var curWidth = this.width *  (1 - ratio);
+		var curWidth = Target.width *  (1 - ratio);
 		this.div.style.width = curWidth + "px";
 		this.div.style.height = curWidth + "px";
 		this.div.style.top = (this.y - curWidth / 2 - this.borderSize) + "px";
@@ -37,14 +41,16 @@ class Target {
     private createTargetDiv(x: number, y: number){
     	this.x = x;
     	this.y = y;
+		var div = document.createElement("div");
 
-        var div = document.createElement("div");
-
+		div.style.top = (this.y - this.borderSize) + "px";
+        div.style.left = (this.x - this.borderSize) + "px";
         div.style.border = this.borderSize + "px solid #B01E00";
         div.style.borderRadius = "50%";
 
         div.classList.add(this.type);
         div.classList.add("gameStateTemporary");
+
         document.body.appendChild(div);
 
         // todo: we need the click event to still go through to the background div

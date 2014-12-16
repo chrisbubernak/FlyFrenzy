@@ -22,13 +22,13 @@ class HomeState extends State {
         }
 
         var startButton = <any>document.getElementById("startButton");
-        startButton.onclick = function() { app.ChangeState(GameState.Instance()); };
+        startButton.addEventListener('touchend', function() { app.ChangeState(GameState.Instance()); }, false);
 
         var highScoreButton = <any>document.getElementById("highScoreButton");
-        highScoreButton.onclick = function() { app.ChangeState(HighScoreState.Instance()); };
+        highScoreButton.addEventListener('touchend', function() { app.ChangeState(HighScoreState.Instance()); }, false);
 
         var aboutButton = <any>document.getElementById("aboutButton");
-        aboutButton.onclick = function() { app.ChangeState(AboutState.Instance()); };
+        aboutButton.addEventListener('touchend', function() { app.ChangeState(AboutState.Instance()); }, false);
     }
 
     public Exit(app: App) {

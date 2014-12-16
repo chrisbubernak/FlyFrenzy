@@ -1,4 +1,4 @@
-﻿/// <reference path="gameState.ts"/>
+/// <reference path="gameState.ts"/>
 
 class Fly {
     static count: number = 0;
@@ -98,12 +98,20 @@ class Fly {
 
         // todo: we probably don't need a new copy of this function for each fly
         // this should be refactored out at some point
-        div.onclick = function (event) {
+        /*div.onclick = function (event) {
             that.healthRemaining--;
             (<any>navigator).vibrate(50);
             GameState.Instance().ClickHandler(event);
-        };
+        };*/
+
+        div.addEventListener("touchstart", GameState.Instance().handleTouch, false);
+
         document.body.appendChild(div);
         return div;
+    }
+
+    public clicked() {
+        this.healthRemaining--;
+        (<any>navigator).vibrate(50);
     }
 } 
