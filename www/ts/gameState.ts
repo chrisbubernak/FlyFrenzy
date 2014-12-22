@@ -1,8 +1,11 @@
-﻿/// <reference path="fly.ts"/>
+/// <reference path="fly.ts"/>
 /// <reference path="target.ts"/>
 /// <reference path="flyFactory.ts"/>
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
+/// <reference path="fileSystemWrapper.ts"/>
+/// <reference path="definitions/cordova/cordova.d.ts"/>
+/// <reference path="definitions/cordova/plugins/Dialogs.d.ts"/>
 
 class GameState extends State{
     public maxLeft: number = window.innerWidth;
@@ -135,6 +138,8 @@ class GameState extends State{
         // update the level
         GameState.instance.currentLevel++;
 
+        GameState.Instance().saveHighScore();
+
         // index 1 = Next Level, 2 = Exit
         var instance = GameState.Instance();
         if (index === 1) {
@@ -154,7 +159,7 @@ class GameState extends State{
         if(this.timeCounter === 0 && this.flies.length > 0) {
             var instance = GameState.Instance();
             clearInterval(instance.intervalId);
-            (<any>navigator).notification.confirm(
+            navigator.notification.confirm(
                 instance.remainingFlies() + " flies remaining." ,
                 this.levelFailedDialog,
                 "Game Over",            
@@ -184,6 +189,19 @@ class GameState extends State{
         return false;
     }
 
+    private saveHighScore() {
+        FileSystemWrapper.AddHighScore(GameState.Instance().currentLevel);
+        //alert((<any>window).plugins);
+        // (<any>window).plugins.toast.showShortBottom("Saving Score!");
+        //var scores = FileSystemWrapper.ReadHighScores();
+        // does a high score file exist?
+            // if not, create one
+        // read the file as a JSON string then turn into a list of score
+        // read the high scores
+        // see if this new score should be on the list
+        // if it should add it, else ignore
+    }
+
     private run () {
         var instance = GameState.Instance();
 
@@ -208,7 +226,7 @@ class GameState extends State{
                 instance.remainingToKill--;
                 if (fly.type === "poisonFly") {
                     clearInterval(instance.intervalId);
-                        (<any>navigator).notification.confirm(
+                        navigator.notification.confirm(
                         "You got poisoned!",
                         instance.levelFailedDialog,
                         "Game Over!",            
@@ -230,7 +248,7 @@ class GameState extends State{
 
         if (instance.remainingFlies() === 0) {
             clearInterval(instance.intervalId);
-            (<any>navigator).notification.confirm(
+            navigator.notification.confirm(
                 "Level Completed",
                 instance.levelCompleteDialog,
                 "Great Job!",            

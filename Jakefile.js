@@ -12,7 +12,9 @@ var pluginCmds = [
 	'cordova plugin add com.google.playservices',
 	'cordova plugin add com.rjfun.cordova.plugin.admob',
 	'cordova plugin add org.apache.cordova.dialogs',
-	'cordova plugin add org.apache.cordova.vibration'
+	'cordova plugin add org.apache.cordova.vibration',
+	'cordova plugin add org.apache.cordova.file',
+	'cordova plugin add https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git'
 ];
 
 

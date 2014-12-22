@@ -1,8 +1,11 @@
-﻿/// <reference path="fly.ts"/>
+/// <reference path="fly.ts"/>
 /// <reference path="target.ts"/>
 /// <reference path="flyFactory.ts"/>
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
+/// <reference path="fileSystemWrapper.ts"/>
+/// <reference path="definitions/cordova/cordova.d.ts"/>
+/// <reference path="definitions/cordova/plugins/Dialogs.d.ts"/>
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -135,6 +138,8 @@ var GameState = (function (_super) {
         // update the level
         GameState.instance.currentLevel++;
 
+        GameState.Instance().saveHighScore();
+
         // index 1 = Next Level, 2 = Exit
         var instance = GameState.Instance();
         if (index === 1) {
@@ -167,20 +172,8 @@ var GameState = (function (_super) {
     };
 
     GameState.prototype.collides = function (touchObj, flyObj) {
-        /*var width: number = flyObj.width;
-        var height: number = flyObj.height;
-        var x1: number = flyObj.div.offsetLeft + width/2;
-        var y1: number = flyObj.div.offsetTop + height/2;;
-        
-        var obj2 = {x: x1, y: y1, width: width, height: height};
-        
-        // crude collision detection
-        var r1 = (obj1.width + obj1.height) / 4;
-        var r2 = (obj2.width + obj2.height) / 4;
-        var r = r1 + r2;
-        var x = obj1.x - obj2.x;
-        var y = obj1.y - obj2.y;
-        var r = r1 + r2;*/
+        // todo: game objects should have a uniform interface so that we can just check collisions
+        // between objects instead of this special cased touchObj v flyObj check
         var x = touchObj.x - (flyObj.div.offsetLeft + flyObj.width / 2);
         var y = touchObj.y - (flyObj.div.offsetTop + flyObj.height / 2);
         var r = touchObj.radius + (flyObj.width + flyObj.height) / 4;
@@ -189,6 +182,19 @@ var GameState = (function (_super) {
             return true;
         }
         return false;
+    };
+
+    GameState.prototype.saveHighScore = function () {
+        FileSystemWrapper.AddHighScore(GameState.Instance().currentLevel);
+        //alert((<any>window).plugins);
+        // (<any>window).plugins.toast.showShortBottom("Saving Score!");
+        //var scores = FileSystemWrapper.ReadHighScores();
+        // does a high score file exist?
+        // if not, create one
+        // read the file as a JSON string then turn into a list of score
+        // read the high scores
+        // see if this new score should be on the list
+        // if it should add it, else ignore
     };
 
     GameState.prototype.run = function () {

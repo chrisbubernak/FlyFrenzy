@@ -3,7 +3,7 @@
 
 class App implements StateMachine{
 	currentState: State;
-
+	
 	constructor() {
 		this.ChangeState(HomeState.Instance());
 	}

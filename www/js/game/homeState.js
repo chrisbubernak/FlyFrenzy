@@ -29,17 +29,17 @@ var HomeState = (function (_super) {
         }
 
         var startButton = document.getElementById("startButton");
-        startButton.addEventListener('touchend', function () {
+        startButton.addEventListener('click', function () {
             app.ChangeState(GameState.Instance());
         }, false);
 
         var highScoreButton = document.getElementById("highScoreButton");
-        highScoreButton.addEventListener('touchend', function () {
+        highScoreButton.addEventListener('click', function () {
             app.ChangeState(HighScoreState.Instance());
         }, false);
 
         var aboutButton = document.getElementById("aboutButton");
-        aboutButton.addEventListener('touchend', function () {
+        aboutButton.addEventListener('click', function () {
             app.ChangeState(AboutState.Instance());
         }, false);
     };

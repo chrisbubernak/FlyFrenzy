@@ -18,6 +18,7 @@ class HighScoreState extends State {
         for (var i = 0; i < html.length; i++) {
             (<HTMLDivElement>html[i]).style.display = "inline";
         }
+        var scores = FileSystemWrapper.ReadHighScores();
     }
 
     public Exit(app: App) {

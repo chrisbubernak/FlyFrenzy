@@ -25,6 +25,7 @@ var HighScoreState = (function (_super) {
         for (var i = 0; i < html.length; i++) {
             html[i].style.display = "inline";
         }
+        var scores = FileSystemWrapper.ReadHighScores();
     };
 
     HighScoreState.prototype.Exit = function (app) {
