@@ -117,6 +117,18 @@ html, body {
 }
 
 /*
+ * HIGH SCORE CSS
+ */
+
+ .highScore {
+  display: inline-block;
+  width: 100%;
+  color: white;
+  font-size: 30px;
+  font-family: "helvetica";
+ }
+
+/*
  * GAME CSS
  */
 

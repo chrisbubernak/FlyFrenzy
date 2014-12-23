@@ -2,11 +2,8 @@
 
 /* expose a nice clean interface to the rest of the app */
 module FileSystemWrapper {
-	//var storageLocation: string = cordova.file.dataDirectory;
 
 	export function ReadHighScores() {
-		//var r = new FileReader();
-		//(<any>window).plugins.toast.showLongBottom(cordova.file.dataDirectory);
 		var storageLocation: string = cordova.file.dataDirectory;
 		window.requestFileSystem(window.PERSISTENT, 
         	1024 * 1024, //1 mb of storage 
@@ -18,7 +15,7 @@ module FileSystemWrapper {
 							function(file: File){ 
 								var reader = new FileReader();
 								reader.onloadend = function(e) {
-									(<any>window).plugins.toast.showLongBottom(this.result);
+									HighScoreState.Instance().DrawHighScores(this.result);
 								};
 								reader.readAsText(file);
 							},
@@ -75,8 +72,7 @@ module FileSystemWrapper {
 				msg = 'Unknown Error';
 				break;
 		}
-		alert(msg);
-		//(<any>window).plugins.toast.showShortBottom(msg);
+		(<any>window).plugins.toast.showShortBottom(msg);
 	}
 
 
