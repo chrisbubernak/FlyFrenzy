@@ -3,7 +3,6 @@
 /// <reference path="flyFactory.ts"/>
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
-/// <reference path="fileSystemWrapper.ts"/>
 /// <reference path="definitions/cordova/cordova.d.ts"/>
 /// <reference path="definitions/cordova/plugins/Dialogs.d.ts"/>
 
@@ -70,6 +69,8 @@ class GameState extends State{
 
         var backgroundDiv = document.getElementById("gameStateBackground");
         backgroundDiv.addEventListener('touchstart', this.handleTouch, false);
+
+        instance.saveHighScore();
     }
 
     public Exit(app: App) {
@@ -190,16 +191,33 @@ class GameState extends State{
     }
 
     private saveHighScore() {
-        FileSystemWrapper.AddHighScore(GameState.Instance().currentLevel);
-        //alert((<any>window).plugins);
-        // (<any>window).plugins.toast.showShortBottom("Saving Score!");
-        //var scores = FileSystemWrapper.ReadHighScores();
-        // does a high score file exist?
-            // if not, create one
-        // read the file as a JSON string then turn into a list of score
-        // read the high scores
-        // see if this new score should be on the list
-        // if it should add it, else ignore
+        // todo: use real values for username, scoreguid, and clientguid
+        var level = GameState.Instance().currentLevel;
+        var userName = "Chris";
+        var scoreGuid = "1111-2222-3333-4444";
+        var clientGuid = "1234-5678-9101112";
+
+        // todo: write the score to local storage first
+        // then try and write to the server, if server write fails
+        // then we can try and write the high score at a later time
+
+        var request = new XMLHttpRequest();
+        request.open('POST', 'https://flyfrenzy.azure-mobile.net/api/HighScore?' +
+            "level=" + level + 
+            "&userName=" + userName +
+            "&clientGuid=" + clientGuid +
+            "&scoreGuid=" + scoreGuid,
+            true);
+        request.onreadystatechange = function() {
+            if(request.readyState == 4 && request.status == 200) {
+                if (JSON.parse(request.responseText).newHighScore) {
+                    (<any>window).plugins.toast.showShortBottom("New High Score!");
+                }
+            } else if (request.readyState == 4 ){
+                (<any>window).plugins.toast.showShortBottom("Unable to communicate with game server.");
+            }
+        }
+        request.send();
     }
 
     private run () {

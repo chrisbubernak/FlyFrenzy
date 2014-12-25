@@ -1,10 +1,12 @@
 /// <reference path="state.ts"/>
 /// <reference path="homeState.ts"/>
 /// <reference path="app.ts"/>
+/// <reference path="fileSystemWrapper.ts"/>
 
 class HighScoreState extends State {
 	private static instance: HighScoreState;
     private stateName: string = "highScoreState"; 
+    private temporaryDivsClass: string = "highScoreStateTemporary";
     private divContainer: string = "highScoresContainer";
 
     public static Instance(): HighScoreState {
@@ -19,14 +21,18 @@ class HighScoreState extends State {
         for (var i = 0; i < html.length; i++) {
             (<HTMLDivElement>html[i]).style.display = "inline";
         }
-        this.DrawHighScores("2 4 5 6");
-        //FileSystemWrapper.ReadHighScores();
+        FileSystemWrapper.ReadHighScores();
     }
 
     public Exit(app: App) {
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             (<HTMLDivElement>html[i]).style.display = "none";
+        }
+
+        var temporaryDivs = document.getElementsByClassName(this.temporaryDivsClass);
+        for (var i = temporaryDivs.length-1; i >= 0; i--) {
+            (<HTMLDivElement>temporaryDivs[i]).parentNode.removeChild(temporaryDivs[i]);
         }
     }
 
@@ -36,12 +42,12 @@ class HighScoreState extends State {
         var scoreContainer = document.getElementById(instance.divContainer);
         for (var i = 0; i < scoreArray.length; i++) {
             var div = document.createElement("div");
-            div.innerHTML = (i+1) + ". Level " + scoreArray[i] + " 12/22/2014";
+            div.innerHTML = (i+1) + ". Level " + scoreArray[i];
             div.classList.add("highScore");
             div.classList.add(instance.stateName);
+            div.classList.add(instance.temporaryDivsClass);
             scoreContainer.appendChild(div);
         }
-        (<any>window).plugins.toast.showLongBottom(scoreArray);
     }
 
     public OnBack(app: App) {

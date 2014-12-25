@@ -2,7 +2,7 @@
 
 /* expose a nice clean interface to the rest of the app */
 module FileSystemWrapper {
-
+	//https://flyfrenzy.azure-mobile.net/api/HighScore
 	export function ReadHighScores() {
 		var storageLocation: string = cordova.file.dataDirectory;
 		window.requestFileSystem(window.PERSISTENT, 
@@ -27,7 +27,7 @@ module FileSystemWrapper {
         );
 	}
 
-	export function AddHighScore(score: number) {
+	export function SaveHighScores(highScores: string) {
 		var storageLocation: string = cordova.file.dataDirectory;
 		window.requestFileSystem(window.PERSISTENT, 
         	1024 * 1024, //1 mb of storage 
@@ -37,10 +37,8 @@ module FileSystemWrapper {
         			function(entry: FileEntry) {
 						entry.createWriter(
 							function(fileWriter: FileWriter){ 
-								fileWriter.seek(fileWriter.length);
-								var blob = new Blob([" " + score], {type:'text/plain'});
+								var blob = new Blob([highScores], {type:'text/plain'});
 								fileWriter.write(blob);
-								(<any>window).plugins.toast.showLongBottom("Added New High Score!");
 							},
         					FileSystemWrapper.ErrorHandler);
         			},
@@ -48,6 +46,48 @@ module FileSystemWrapper {
         	}, 
         	FileSystemWrapper.ErrorHandler
         );
+	}
+
+	export function SubmitScore(newScore: number) {
+		var storageLocation: string = cordova.file.dataDirectory;
+		window.requestFileSystem(window.PERSISTENT, 
+        	1024 * 1024, //1 mb of storage 
+        	function(fs: FileSystem) { // success callback
+        		var root: DirectoryEntry = fs.root;
+        		root.getFile("scores", {create: true},
+        			function(entry: FileEntry) {
+						entry.file(
+							function(file: File){ 
+								var reader = new FileReader();
+								reader.onloadend = function(e) {
+									(<any>window).plugins.toast.showShortBottom(this.result);
+									UpdateHighScores(newScore, this.result);
+								};
+								reader.readAsText(file);
+							},
+        					FileSystemWrapper.ErrorHandler);
+        			},
+        			FileSystemWrapper.ErrorHandler);
+        	}, 
+        	FileSystemWrapper.ErrorHandler
+        );
+	}
+
+
+	export function UpdateHighScores(newScore: number, highScores: number []) {
+		for (var i = 0; i < highScores.length; i++) {
+			if (newScore > highScores[i]) {
+				highScores.splice(i,0, newScore);
+				(<any>window).plugins.toast.showShortBottom("New High Score!");
+				break;
+			}
+		}
+
+		// trim the array down to 10 elements
+		highScores = highScores.slice(0, 10);
+
+		// write this new list to the scores file
+		SaveHighScores(highScores.join(" "));
 	}
 
 	export function ErrorHandler(e) {
