@@ -36,6 +36,18 @@ class HomeState extends State {
         for (var i = 0; i < html.length; i++) {
             (<HTMLDivElement>html[i]).style.display = "none";
         }
+        var instance = HomeState.Instance();
+        instance.removeEventHandler('startButton');
+        instance.removeEventHandler('highScoreButton');
+        instance.removeEventHandler('aboutButton');
+    }
+
+    // instead of removing the event handlers just clone the div
+    // and then replace
+    private removeEventHandler(id: string) {
+        var el = document.getElementById(id),
+        elClone = el.cloneNode(true);
+        el.parentNode.replaceChild(elClone, el);
     }
 
     public OnBack(app: App) {

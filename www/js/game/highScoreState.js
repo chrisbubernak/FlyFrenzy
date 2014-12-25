@@ -23,22 +23,24 @@ var HighScoreState = (function (_super) {
     };
 
     HighScoreState.prototype.Enter = function (app) {
+        alert('enter high score');
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             html[i].style.display = "inline";
         }
 
-        //FileSystemWrapper.ReadHighScores();
         this.GetHighScores();
     };
 
     HighScoreState.prototype.Exit = function (app) {
+        alert('exit high score');
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             html[i].style.display = "none";
         }
 
         var temporaryDivs = document.getElementsByClassName(this.temporaryDivsClass);
+        alert(temporaryDivs.length);
         for (var i = temporaryDivs.length - 1; i >= 0; i--) {
             temporaryDivs[i].parentNode.removeChild(temporaryDivs[i]);
         }

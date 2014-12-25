@@ -69,8 +69,6 @@ var GameState = (function (_super) {
 
         var backgroundDiv = document.getElementById("gameStateBackground");
         backgroundDiv.addEventListener('touchstart', this.handleTouch, false);
-
-        instance.saveHighScore();
     };
 
     GameState.prototype.Exit = function (app) {

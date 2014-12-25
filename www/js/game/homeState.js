@@ -49,6 +49,17 @@ var HomeState = (function (_super) {
         for (var i = 0; i < html.length; i++) {
             html[i].style.display = "none";
         }
+        var instance = HomeState.Instance();
+        instance.removeEventHandler('startButton');
+        instance.removeEventHandler('highScoreButton');
+        instance.removeEventHandler('aboutButton');
+    };
+
+    // instead of removing the event handlers just clone the div
+    // and then replace
+    HomeState.prototype.removeEventHandler = function (id) {
+        var el = document.getElementById(id), elClone = el.cloneNode(true);
+        el.parentNode.replaceChild(elClone, el);
     };
 
     HomeState.prototype.OnBack = function (app) {
