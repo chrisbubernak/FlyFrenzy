@@ -69,8 +69,6 @@ class GameState extends State{
 
         var backgroundDiv = document.getElementById("gameStateBackground");
         backgroundDiv.addEventListener('touchstart', this.handleTouch, false);
-
-        instance.saveHighScore();
     }
 
     public Exit(app: App) {
