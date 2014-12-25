@@ -5,4 +5,4 @@ releaseBuilds/
 Thumbs.db
 www/img/Thumbs.db
 releaseImages/Thumbs.db
-www/js/game/
+www/js/game/*
