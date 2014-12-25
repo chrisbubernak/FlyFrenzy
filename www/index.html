@@ -38,7 +38,7 @@
         </div>
         <div class="fullscreen">
             <div class="centered">
-                <div class="highScore">HIGH SCORES</div>
+                <div class="highScoreTitle">HIGH SCORES</div>
                 <div id="highScoresContainer">
                 </div>
             </div>
@@ -71,7 +71,7 @@
     <script src="js/game/target.js"></script>
     <script src="js/game/fileSystemWrapper.js"></script>
     <script>
-        var app = new App();
+        var app;
         function deviceReady() {
             app = new App();
             document.addEventListener(

@@ -1,7 +1,6 @@
 /// <reference path="state.ts"/>
 /// <reference path="homeState.ts"/>
 /// <reference path="app.ts"/>
-/// <reference path="fileSystemWrapper.ts"/>
 
 class HighScoreState extends State {
 	private static instance: HighScoreState;
@@ -21,7 +20,8 @@ class HighScoreState extends State {
         for (var i = 0; i < html.length; i++) {
             (<HTMLDivElement>html[i]).style.display = "inline";
         }
-        FileSystemWrapper.ReadHighScores();
+
+        this.GetHighScores();
     }
 
     public Exit(app: App) {
@@ -36,18 +36,31 @@ class HighScoreState extends State {
         }
     }
 
-    public DrawHighScores(scores) {
+    public DrawHighScores(scoreArray) {
         var instance = HighScoreState.Instance();
-        var scoreArray = scores.split(" ");
         var scoreContainer = document.getElementById(instance.divContainer);
         for (var i = 0; i < scoreArray.length; i++) {
             var div = document.createElement("div");
-            div.innerHTML = (i+1) + ". Level " + scoreArray[i];
+            div.innerHTML = (i+1) + ". Level " + scoreArray[i].Level + " " + scoreArray[i].UserName;
             div.classList.add("highScore");
             div.classList.add(instance.stateName);
             div.classList.add(instance.temporaryDivsClass);
             scoreContainer.appendChild(div);
         }
+    }
+
+    public GetHighScores() {
+        var instance = HighScoreState.Instance();
+        var request = new XMLHttpRequest();
+        request.open('GET', 'https://flyfrenzy.azure-mobile.net/api/HighScore', true);
+        request.onreadystatechange = function() {
+            if(request.readyState == 4 && request.status == 200) {
+                instance.DrawHighScores(JSON.parse(request.responseText));
+            } else if (request.readyState == 4 ){
+                (<any>window).plugins.toast.showShortBottom("Unable to communicate with game server.");
+            }
+        }
+        request.send();
     }
 
     public OnBack(app: App) {

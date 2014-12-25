@@ -119,9 +119,18 @@ html, body {
 /*
  * HIGH SCORE CSS
  */
+ .highScoreTitle {
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  color: white;
+  font-size: 30px;
+  font-family: "helvetica";
+ }
 
  .highScore {
   display: inline-block;
+  text-align: left;
   width: 100%;
   color: white;
   font-size: 30px;
