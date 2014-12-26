@@ -106,10 +106,12 @@ desc('Compiles TS files into JS');
 task('compile', [], function (params) {
 	var path = './www/ts/';
 	var dirs = fs.readdirSync(path);
-	var cmds = ['tsc ./www/ts/app.ts']; /* b/c of the references everything gets compiled just by compiling this */
+	/* b/c of the references everything gets compiled just by compiling this */
+	var cmds = ['if not exist .\\www\\js\\game mkdir .\\www\\js\\game', 'tsc ./www/ts/app.ts']; 
 	jake.exec(cmds, {printStdout: true}, function () {
 		complete();
-		var c = ['for /R .\\www\\ts\\ %f in (*.js) do move %f .\\www\\js\\game']; // move all of the ts files into our js folder
+		// move all of the ts files into our js folder
+		var c = ['for /R .\\www\\ts\\ %f in (*.js) do move %f .\\www\\js\\game\\']; 
 		jake.exec(c, {printStdout: true}, function() {
 			complete();
 			console.log('Successfully compiled and moved files!');
