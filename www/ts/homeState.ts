@@ -7,6 +7,7 @@
 class HomeState extends State {
 	private static instance: HomeState;
     private stateName: string = "homeState"; 
+    private userName: string;
 
     public static Instance(): HomeState {
         if (typeof HomeState.instance === "undefined") {
@@ -29,6 +30,28 @@ class HomeState extends State {
 
         var aboutButton = <any>document.getElementById("aboutButton");
         aboutButton.addEventListener('click', function() { app.ChangeState(AboutState.Instance()); }, false);
+
+        var instance = HomeState.Instance();
+        if(instance.GetUserName() === undefined) {
+            if (localStorage.getItem("userName") === null) {
+                // make user give us a user name
+                navigator.notification.prompt("Please Enter a Username", function (results) {
+                    var button = results.buttonIndex;
+                    var text = results.input1;
+                    if (button === 1) {
+                        localStorage.setItem("userName", text);
+                        instance.SetUserName(localStorage.getItem("userName"));
+                        (<any>window).plugins.toast.showShortBottom("Signed in as " + instance.GetUserName());
+                    } else {
+                        app.ChangeState(HomeState.Instance());
+                    }
+                }, 'Sign In', ['OK', 'Exit'], '');
+
+            } else {
+                instance.SetUserName(localStorage.getItem("userName"));
+                (<any>window).plugins.toast.showShortBottom("Signed in as " + instance.GetUserName());
+            }
+        }
     }
 
     public Exit(app: App) {
@@ -58,5 +81,15 @@ class HomeState extends State {
         // from the home screen there is really no 
         // sense to pause just exit the app
         (<any>navigator).app.exitApp();
+    }
+
+    public GetUserName(): string {
+        var instance = HomeState.Instance();
+        return instance.userName;
+    }
+
+    public SetUserName(userName: string) {
+        var instance = HomeState.Instance();
+        instance.userName = userName;   
     }
 }

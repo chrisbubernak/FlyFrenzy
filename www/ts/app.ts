@@ -1,5 +1,6 @@
 /// <reference path="state.ts"/>
 /// <reference path="homeState.ts"/>
+/// <reference path="fileSystemWrapper.ts"/>
 
 class App implements StateMachine{
 	currentState: State;

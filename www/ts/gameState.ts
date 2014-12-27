@@ -191,7 +191,7 @@ class GameState extends State{
     private saveHighScore() {
         // todo: use real values for username, scoreguid, and clientguid
         var level = GameState.Instance().currentLevel;
-        var userName = "Chris";
+        var userName = HomeState.Instance().GetUserName();
         var scoreGuid = "1111-2222-3333-4444";
         var clientGuid = "1234-5678-9101112";
 
