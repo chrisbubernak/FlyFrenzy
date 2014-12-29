@@ -29,22 +29,21 @@ class HighScoreState extends State {
         for (var i = 0; i < html.length; i++) {
             (<HTMLDivElement>html[i]).style.display = "none";
         }
-
-        var temporaryDivs = document.getElementsByClassName(this.temporaryDivsClass);
-        for (var i = temporaryDivs.length-1; i >= 0; i--) {
-            (<HTMLDivElement>temporaryDivs[i]).parentNode.removeChild(temporaryDivs[i]);
-        }
     }
 
     public DrawHighScores(scoreArray) {
-        var instance = HighScoreState.Instance();
+        var instance = HighScoreState.Instance();        
+
+        // remove the old high scores if they exist for some reason...
         var scoreContainer = document.getElementById(instance.divContainer);
+        scoreContainer.innerHTML = "";
+
+        // draw the new ones!
         for (var i = 0; i < scoreArray.length; i++) {
             var div = document.createElement("div");
-            div.innerHTML = (i+1) + ". Level " + scoreArray[i].Level + " " + scoreArray[i].UserName;
+            div.innerHTML = "Level " + scoreArray[i].Level + " - " + scoreArray[i].UserName;
             div.classList.add("highScore");
             div.classList.add(instance.stateName);
-            div.classList.add(instance.temporaryDivsClass);
             scoreContainer.appendChild(div);
         }
     }

@@ -200,6 +200,7 @@ class GameState extends State{
         // then we can try and write the high score at a later time
 
         var request = new XMLHttpRequest();
+        // todo: remove hardcoded url here....also use flyfrenzy.bubernak.com 
         request.open('POST', 'https://flyfrenzy.azure-mobile.net/api/HighScore?' +
             "level=" + level + 
             "&userName=" + userName +
