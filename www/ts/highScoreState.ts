@@ -40,10 +40,32 @@ class HighScoreState extends State {
 
         // draw the new ones!
         for (var i = 0; i < scoreArray.length; i++) {
-            var div = document.createElement("div");
-            div.innerHTML = "Level " + scoreArray[i].Level + " - " + scoreArray[i].UserName;
+            /*var div = document.createElement("div");
+            div.innerHTML = (i + 1) + "\t" + scoreArray[i].UserName + " \t " + scoreArray[i].Level;
             div.classList.add("highScore");
             div.classList.add(instance.stateName);
+            scoreContainer.appendChild(div)*/;
+
+            var div = document.createElement("div");
+            div.classList.add("highScore");
+            div.classList.add(instance.stateName);
+
+            var rankDiv = document.createElement("div")
+            rankDiv.classList.add("highScoreRank");
+            rankDiv.innerHTML = String(i + 1);
+
+            var userDiv = document.createElement("div")
+            userDiv.classList.add("highScoreName");
+            userDiv.innerHTML = scoreArray[i].UserName;
+
+            var scoreDiv = document.createElement("div")
+            scoreDiv.classList.add("highScoreScore");
+            scoreDiv.innerHTML = scoreArray[i].Level;
+
+            div.appendChild(rankDiv);
+            div.appendChild(userDiv);
+            div.appendChild(scoreDiv);
+
             scoreContainer.appendChild(div);
         }
     }

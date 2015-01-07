@@ -3,6 +3,7 @@
 /// <reference path="flyFactory.ts"/>
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
+/// <reference path="utilities.ts"/>
 /// <reference path="definitions/cordova/cordova.d.ts"/>
 /// <reference path="definitions/cordova/plugins/Dialogs.d.ts"/>
 
@@ -36,6 +37,10 @@ class GameState extends State{
         return GameState.instance;
     }
 
+    // todo: need to separate logic for Entering game state and starting a new level
+    // the enter code should call start game but we don't want to exit and enter game state
+    // every time we beat a level
+    // this way in Enter we can do things like...set the ScoreGuid
     public Enter(app: App) {
         this.timeCounter = this.startTime;
         this.gameLoopCounter = 0;
@@ -189,11 +194,12 @@ class GameState extends State{
     }
 
     private saveHighScore() {
-        // todo: use real values for username, scoreguid, and clientguid
-        var level = GameState.Instance().currentLevel;
-        var userName = HomeState.Instance().GetUserName();
+        var instance = GameState.Instance();
+        // todo: use real values for scoreGuid
+        var level = instance.currentLevel;
+        var userName = instance.app.GetUserName();
         var scoreGuid = "1111-2222-3333-4444";
-        var clientGuid = "1234-5678-9101112";
+        var clientGuid = instance.app.GetClientGuid();
 
         // todo: write the score to local storage first
         // then try and write to the server, if server write fails

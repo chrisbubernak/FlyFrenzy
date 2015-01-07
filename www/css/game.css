@@ -116,26 +116,54 @@ html, body {
   max-height: 45vw;
 }
 
-/*
- * HIGH SCORE CSS
- */
- .highScoreTitle {
+.header {
+  background-color: #7E8352;
+  width: 100%;
+}
+
+ .headerText {
   display: inline-block;
   text-align: center;
-  width: 100%;
   color: white;
-  font-size: 30px;
+  font-size: 2em;
   font-family: "helvetica";
  }
 
- .highScore {
+/*
+ * HIGH SCORE CSS
+ */
+
+
+.highScore {
   display: inline-block;
-  text-align: left;
+  /*text-align: left;*/
   width: 100%;
-  color: white;
+  color: black;
   font-size: 20px;
   font-family: "helvetica";
- }
+  border-bottom: 1px solid lightgray;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
+.highScoreRank {
+  color: black;
+  text-align: center;
+  font-weight: bold;
+  width: 10vw;
+  display:inline-block;
+}
+
+.highScoreName {
+  color: black;
+  width: 70vw;
+  display:inline-block;
+}
+
+.highScoreScore {
+  display:inline-block;
+  color: #7E8352;
+}
 
 /*
  * GAME CSS
