@@ -47,7 +47,7 @@ class App implements StateMachine{
 	}
 
 	public GetClientGuid(): string {
-		return this.clientGuid
+		return this.clientGuid;
 	}
 
 	public SetClientGuid(clientGuid: string): void {

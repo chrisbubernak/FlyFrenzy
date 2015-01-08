@@ -40,12 +40,6 @@ class HighScoreState extends State {
 
         // draw the new ones!
         for (var i = 0; i < scoreArray.length; i++) {
-            /*var div = document.createElement("div");
-            div.innerHTML = (i + 1) + "\t" + scoreArray[i].UserName + " \t " + scoreArray[i].Level;
-            div.classList.add("highScore");
-            div.classList.add(instance.stateName);
-            scoreContainer.appendChild(div)*/;
-
             var div = document.createElement("div");
             div.classList.add("highScore");
             div.classList.add(instance.stateName);

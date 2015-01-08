@@ -38,6 +38,8 @@ class HomeState extends State {
                 var guid = Utilities.GUID();
                 localStorage.setItem("clientGuid", guid);
                 app.SetClientGuid(guid);
+            } else {
+                app.SetClientGuid(localStorage.getItem("clientGuid"));
             }
         }
 

@@ -29,6 +29,7 @@ class GameState extends State{
     private static instance: GameState;
     private intervalId: any;
     private app: App;
+    private scoreGuid: string;
 
     public static Instance(): GameState {
         if (typeof GameState.instance === "undefined") {
@@ -42,38 +43,20 @@ class GameState extends State{
     // every time we beat a level
     // this way in Enter we can do things like...set the ScoreGuid
     public Enter(app: App) {
-        this.timeCounter = this.startTime;
-        this.gameLoopCounter = 0;
-        this.flies = [];
-        this.targets = [];
-        this.touchList = [];
-
+        this.currentLevel = this.startLevel;
+        this.scoreGuid = Utilities.GUID();
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             (<HTMLDivElement>html[i]).style.display = "inline";
         }
 
-        this.updateTime();
-
         var instance = GameState.Instance();
         instance.app = app;
 
-        instance.flies = FlyFactory.CreateFliesForLevel(instance.currentLevel);
-        this.remainingToKill = instance.flies.length;
-        // figure out how many flies actually need to be killed to beat the level
-        // poisoned ones don't count!
-        for (var i = 0; i < instance.flies.length; i++) {
-            if (instance.flies[i].type === "poisonFly") {
-                this.remainingToKill--;
-            }
-        }
-
-        this.levelDiv.innerHTML = this.currentLevel.toString();
-
-        instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
-
         var backgroundDiv = document.getElementById("gameStateBackground");
         backgroundDiv.addEventListener('touchstart', this.handleTouch, false);
+
+        instance.StartLevel();
     }
 
     public Exit(app: App) {
@@ -94,6 +77,42 @@ class GameState extends State{
 
         var backgroundDiv = document.getElementById("gameStateBackground");
         backgroundDiv.removeEventListener("touchstart", this.handleTouch);
+    }
+
+    private StartLevel() {
+        var instance = GameState.Instance();
+        instance.timeCounter = this.startTime;
+        instance.gameLoopCounter = 0;
+        instance.targets = [];
+        instance.touchList = [];
+        
+        instance.flies = FlyFactory.CreateFliesForLevel(instance.currentLevel);
+        instance.remainingToKill = instance.flies.length;
+        // figure out how many flies actually need to be killed to beat the level
+        // poisoned ones don't count!
+        for (var i = 0; i < instance.flies.length; i++) {
+            if (instance.flies[i].type === "poisonFly") {
+                instance.remainingToKill--;
+            }
+        }
+
+        instance.updateTime();
+
+
+        instance.levelDiv.innerHTML = instance.currentLevel.toString();
+
+        instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
+    }
+
+    public EndLevel() {
+        var instance = GameState.Instance();
+        clearInterval(instance.intervalId);
+
+        var temporaryDivs = document.getElementsByClassName(instance.temporaryDivsClass);
+        for (var i = temporaryDivs.length-1; i >= 0; i--) {
+            (<HTMLDivElement>temporaryDivs[i]).parentNode.removeChild(temporaryDivs[i]);
+        }
+        instance.StartLevel(); // start the next level!
     }
 
     public OnPause(app: App) {
@@ -129,30 +148,32 @@ class GameState extends State{
         var instance = GameState.Instance();
         if (index === 1) {
             // re-try the level
-            this.app.ChangeState(GameState.Instance());
+            instance.EndLevel();
         } else if (index === 2) {
-            this.app.ChangeState(HomeState.Instance());
+            instance.app.ChangeState(HomeState.Instance());
         } else {
             // lets just let user re-try the level
-            this.app.ChangeState(GameState.Instance());
+            instance.EndLevel();        
         }
     }
 
     private levelCompleteDialog(index: number) {
+        var instance = GameState.Instance();
+        
         // update the level
-        GameState.instance.currentLevel++;
-
-        GameState.Instance().saveHighScore();
+        instance.currentLevel++;
+        // send current score to server
+        instance.saveHighScore();
 
         // index 1 = Next Level, 2 = Exit
         var instance = GameState.Instance();
         if (index === 1) {
-            this.app.ChangeState(GameState.Instance());
+            instance.EndLevel();        
         } else if (index === 2) {
-            this.app.ChangeState(HomeState.Instance());
+            instance.app.ChangeState(HomeState.Instance());
         } else {
             // assume user wants the next level
-            this.app.ChangeState(GameState.Instance());
+            instance.EndLevel();        
         }   
     }
 
@@ -195,10 +216,9 @@ class GameState extends State{
 
     private saveHighScore() {
         var instance = GameState.Instance();
-        // todo: use real values for scoreGuid
         var level = instance.currentLevel;
         var userName = instance.app.GetUserName();
-        var scoreGuid = "1111-2222-3333-4444";
+        var scoreGuid = instance.GetScoreGuid();
         var clientGuid = instance.app.GetClientGuid();
 
         // todo: write the score to local storage first
@@ -207,22 +227,26 @@ class GameState extends State{
 
         var request = new XMLHttpRequest();
         // todo: remove hardcoded url here....also use flyfrenzy.bubernak.com 
-        request.open('POST', 'https://flyfrenzy.azure-mobile.net/api/HighScore?' +
+        var url = 'https://flyfrenzy.azure-mobile.net/api/HighScore?' +
             "level=" + level + 
             "&userName=" + userName +
             "&clientGuid=" + clientGuid +
-            "&scoreGuid=" + scoreGuid,
-            true);
+            "&scoreGuid=" + scoreGuid;
+        request.open('POST', url, true);
         request.onreadystatechange = function() {
             if(request.readyState == 4 && request.status == 200) {
                 if (JSON.parse(request.responseText).newHighScore) {
                     (<any>window).plugins.toast.showShortBottom("New High Score!");
                 }
             } else if (request.readyState == 4 ){
-                (<any>window).plugins.toast.showShortBottom("Unable to communicate with game server.");
+                (<any>window).plugins.toast.showShortBottom("Error: " + request.responseText);
             }
         }
         request.send();
+    }
+
+    private GetScoreGuid() {
+        return this.scoreGuid;
     }
 
     private run () {
