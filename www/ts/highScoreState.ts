@@ -73,6 +73,7 @@ class HighScoreState extends State {
                 instance.DrawHighScores(JSON.parse(request.responseText));
             } else if (request.readyState == 4 ){
                 (<any>window).plugins.toast.showShortBottom("Unable to communicate with game server.");
+                Logger.LogError(request.responseText);
             }
         }
         request.send();
