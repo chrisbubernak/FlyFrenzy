@@ -74,7 +74,6 @@ class GameState extends State{
             (<HTMLDivElement>temporaryDivs[i]).parentNode.removeChild(temporaryDivs[i]);
         }
 
-
         var backgroundDiv = document.getElementById("gameStateBackground");
         backgroundDiv.removeEventListener("touchstart", this.handleTouch);
         backgroundDiv.removeEventListener("click", this.handleTouch);
@@ -98,7 +97,6 @@ class GameState extends State{
         }
 
         instance.updateTime();
-
 
         instance.levelDiv.innerHTML = instance.currentLevel.toString();
 
@@ -215,6 +213,7 @@ class GameState extends State{
         var y = touchObj.y - (flyObj.div.offsetTop + flyObj.height/2);
         var r = touchObj.radius + (flyObj.width + flyObj.height)/4;
         if ((x* x) + (y * y) < r * r ) {
+            Logger.Log("Collision! " + x + " " + y + " " + r);
             return true;
         }
         return false;

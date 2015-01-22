@@ -1,4 +1,5 @@
 /// <reference path="state.ts"/>
+/// <reference path="logger.ts"/>
 /// <reference path="homeState.ts"/>
 
 class App implements StateMachine{
@@ -12,7 +13,7 @@ class App implements StateMachine{
 
 	public ChangeState(newState: State): void {
 		if (!newState) {
-			alert('Error changing game state');
+			Logger.LogError('Error changing game state');
 			return;
 		}
 		

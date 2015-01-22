@@ -4,6 +4,7 @@
 /// <reference path="aboutState.ts"/>
 /// <reference path="highScoreState.ts"/>
 /// <reference path="utilities.ts"/>
+/// <reference path="logger.ts"/>
 
 class HomeState extends State {
 	private static instance: HomeState;
@@ -31,7 +32,6 @@ class HomeState extends State {
 
         var aboutButton = <any>document.getElementById("aboutButton");
         aboutButton.addEventListener('click', function() { app.ChangeState(AboutState.Instance()); }, false);
-
 
         if(app.GetClientGuid() === undefined) {
             if (localStorage.getItem("clientGuid") === null) {
