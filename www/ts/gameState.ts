@@ -3,6 +3,7 @@
 /// <reference path="flyFactory.ts"/>
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
+/// <reference path="utilities.ts"/>
 /// <reference path="definitions/cordova/cordova.d.ts"/>
 /// <reference path="definitions/cordova/plugins/Dialogs.d.ts"/>
 
@@ -22,13 +23,17 @@ class GameState extends State{
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
     private levelDiv: HTMLElement = document.getElementById("levelCounter");
     private stateName: string = "gameState";
+
     // classname for divs that need to be destroyed 
     // during exit (instead of just hidden)
     private temporaryDivsClass: string = "gameStateTemporary";
     private static instance: GameState;
     private intervalId: any;
     private app: App;
+    private scoreGuid: string;
 
+    // boolean that we use as a locking mechanism to not show multiple menus
+    private canLock: boolean = true; 
     public static Instance(): GameState {
         if (typeof GameState.instance === "undefined") {
             GameState.instance = new GameState();
@@ -37,38 +42,21 @@ class GameState extends State{
     }
 
     public Enter(app: App) {
-        this.timeCounter = this.startTime;
-        this.gameLoopCounter = 0;
-        this.flies = [];
-        this.targets = [];
-        this.touchList = [];
-
+        this.currentLevel = this.startLevel;
+        this.scoreGuid = Utilities.GUID();
         var html = document.getElementsByClassName(this.stateName);
         for (var i = 0; i < html.length; i++) {
             (<HTMLDivElement>html[i]).style.display = "inline";
         }
 
-        this.updateTime();
-
         var instance = GameState.Instance();
         instance.app = app;
 
-        instance.flies = FlyFactory.CreateFliesForLevel(instance.currentLevel);
-        this.remainingToKill = instance.flies.length;
-        // figure out how many flies actually need to be killed to beat the level
-        // poisoned ones don't count!
-        for (var i = 0; i < instance.flies.length; i++) {
-            if (instance.flies[i].type === "poisonFly") {
-                this.remainingToKill--;
-            }
-        }
-
-        this.levelDiv.innerHTML = this.currentLevel.toString();
-
-        instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
-
         var backgroundDiv = document.getElementById("gameStateBackground");
         backgroundDiv.addEventListener('touchstart', this.handleTouch, false);
+        backgroundDiv.addEventListener('click', this.handleTouch, false);
+
+        instance.StartLevel();
     }
 
     public Exit(app: App) {
@@ -89,6 +77,43 @@ class GameState extends State{
 
         var backgroundDiv = document.getElementById("gameStateBackground");
         backgroundDiv.removeEventListener("touchstart", this.handleTouch);
+        backgroundDiv.removeEventListener("click", this.handleTouch);
+    }
+
+    private StartLevel() {
+        var instance = GameState.Instance();
+        instance.timeCounter = this.startTime;
+        instance.gameLoopCounter = 0;
+        instance.targets = [];
+        instance.touchList = [];
+        
+        instance.flies = FlyFactory.CreateFliesForLevel(instance.currentLevel);
+        instance.remainingToKill = instance.flies.length;
+        // figure out how many flies actually need to be killed to beat the level
+        // poisoned ones don't count!
+        for (var i = 0; i < instance.flies.length; i++) {
+            if (instance.flies[i].type === "poisonFly") {
+                instance.remainingToKill--;
+            }
+        }
+
+        instance.updateTime();
+
+
+        instance.levelDiv.innerHTML = instance.currentLevel.toString();
+
+        instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
+    }
+
+    public EndLevel() {
+        var instance = GameState.Instance();
+        clearInterval(instance.intervalId);
+
+        var temporaryDivs = document.getElementsByClassName(instance.temporaryDivsClass);
+        for (var i = temporaryDivs.length-1; i >= 0; i--) {
+            (<HTMLDivElement>temporaryDivs[i]).parentNode.removeChild(temporaryDivs[i]);
+        }
+        instance.StartLevel(); // start the next level!
     }
 
     public OnPause(app: App) {
@@ -98,7 +123,9 @@ class GameState extends State{
 
     public OnResume(app: App) {
         var instance = GameState.Instance();
-        if (this.timeCounter > 0) {
+
+        // use instance.canLock to make sure we arean't locked in a dialog
+        if (this.timeCounter > 0 && instance.canLock) {
             instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
         }
     }
@@ -107,16 +134,16 @@ class GameState extends State{
         app.ChangeState(HomeState.Instance());
     }
 
-    public ClickHandler(event) {
-        GameState.Instance().targets.push(new Target(event.x, event.y));
-    }
-
     public handleTouch(e){
-        var evt = {x: (<any>e).changedTouches[0].pageX,
-            y: (<any>e).changedTouches[0].pageY,
-            radius: Target.radius()};
-        GameState.Instance().ClickHandler(evt);
+        var evt = e;
+        // if it is a touch event transform it to look like a click
+        if (e.changedTouches) { 
+            evt = {x: (<any>e).changedTouches[0].pageX,
+            y: (<any>e).changedTouches[0].pageY};
+        } 
+        evt.radius = Target.radius();
         GameState.Instance().touchList.push(evt); 
+        GameState.Instance().targets.push(new Target(evt.x, evt.y));
     }
 
     private levelFailedDialog(index: number) {
@@ -124,39 +151,45 @@ class GameState extends State{
         var instance = GameState.Instance();
         if (index === 1) {
             // re-try the level
-            this.app.ChangeState(GameState.Instance());
+            instance.EndLevel();
         } else if (index === 2) {
-            this.app.ChangeState(HomeState.Instance());
+            instance.app.ChangeState(HomeState.Instance());
         } else {
             // lets just let user re-try the level
-            this.app.ChangeState(GameState.Instance());
+            instance.EndLevel();        
         }
+
+        instance.canLock = true;
     }
 
     private levelCompleteDialog(index: number) {
+        var instance = GameState.Instance();
+        
         // update the level
-        GameState.instance.currentLevel++;
-
-        GameState.Instance().saveHighScore();
+        instance.currentLevel++;
+        // send current score to server
+        instance.saveHighScore();
 
         // index 1 = Next Level, 2 = Exit
         var instance = GameState.Instance();
         if (index === 1) {
-            this.app.ChangeState(GameState.Instance());
+            instance.EndLevel();        
         } else if (index === 2) {
-            this.app.ChangeState(HomeState.Instance());
+            instance.app.ChangeState(HomeState.Instance());
         } else {
             // assume user wants the next level
-            this.app.ChangeState(GameState.Instance());
+            instance.EndLevel();        
         }   
+
+        instance.canLock = true;
     }
 
     public secondElapse() {
         this.timeCounter--;
         this.updateTime();
-
-        if(this.timeCounter === 0 && this.flies.length > 0) {
-            var instance = GameState.Instance();
+        var instance = GameState.Instance();
+        if(this.timeCounter === 0 && this.flies.length > 0 && instance.canLock) {
+            instance.canLock = false;    
             clearInterval(instance.intervalId);
             navigator.notification.confirm(
                 instance.remainingFlies() + " flies remaining." ,
@@ -181,7 +214,6 @@ class GameState extends State{
         var x = touchObj.x - (flyObj.div.offsetLeft + flyObj.width/2);
         var y = touchObj.y - (flyObj.div.offsetTop + flyObj.height/2);
         var r = touchObj.radius + (flyObj.width + flyObj.height)/4;
-
         if ((x* x) + (y * y) < r * r ) {
             return true;
         }
@@ -189,11 +221,11 @@ class GameState extends State{
     }
 
     private saveHighScore() {
-        // todo: use real values for username, scoreguid, and clientguid
-        var level = GameState.Instance().currentLevel;
-        var userName = HomeState.Instance().GetUserName();
-        var scoreGuid = "1111-2222-3333-4444";
-        var clientGuid = "1234-5678-9101112";
+        var instance = GameState.Instance();
+        var level = instance.currentLevel;
+        var userName = instance.app.GetUserName();
+        var scoreGuid = instance.GetScoreGuid();
+        var clientGuid = instance.app.GetClientGuid();
 
         // todo: write the score to local storage first
         // then try and write to the server, if server write fails
@@ -201,22 +233,26 @@ class GameState extends State{
 
         var request = new XMLHttpRequest();
         // todo: remove hardcoded url here....also use flyfrenzy.bubernak.com 
-        request.open('POST', 'https://flyfrenzy.azure-mobile.net/api/HighScore?' +
+        var url = 'https://flyfrenzy.azure-mobile.net/api/HighScore?' +
             "level=" + level + 
             "&userName=" + userName +
             "&clientGuid=" + clientGuid +
-            "&scoreGuid=" + scoreGuid,
-            true);
+            "&scoreGuid=" + scoreGuid;
+        request.open('POST', url, true);
         request.onreadystatechange = function() {
             if(request.readyState == 4 && request.status == 200) {
                 if (JSON.parse(request.responseText).newHighScore) {
                     (<any>window).plugins.toast.showShortBottom("New High Score!");
                 }
             } else if (request.readyState == 4 ){
-                (<any>window).plugins.toast.showShortBottom("Unable to communicate with game server.");
+                (<any>window).plugins.toast.showShortBottom("Error: " + request.responseText);
             }
         }
         request.send();
+    }
+
+    private GetScoreGuid() {
+        return this.scoreGuid;
     }
 
     private run () {
@@ -241,7 +277,8 @@ class GameState extends State{
                 fly.die();
                 instance.flies.splice(f, 1);
                 instance.remainingToKill--;
-                if (fly.type === "poisonFly") {
+                if (fly.type === "poisonFly" && instance.canLock) {
+                    instance.canLock = false;
                     clearInterval(instance.intervalId);
                         navigator.notification.confirm(
                         "You got poisoned!",
@@ -263,7 +300,8 @@ class GameState extends State{
             }
         }
 
-        if (instance.remainingFlies() === 0) {
+        if (instance.remainingFlies() === 0 && instance.canLock) {
+            instance.canLock = false;
             clearInterval(instance.intervalId);
             navigator.notification.confirm(
                 "Level Completed",

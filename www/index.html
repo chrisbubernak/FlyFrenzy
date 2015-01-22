@@ -28,29 +28,21 @@
                 <div id="startButton" class="button firstButton">Start</div>
                 <div id="highScoreButton" class="button">High Scores</div>
                 <div id="aboutButton" class="button">About</div>
-                <div class="footerText">Version 0.1.1</div>
+                <div class="footerText">Version 0.1.2</div>
             </div>
         </div>
     </div>
     <div class="highScoreState">
-        <div class="background fullscreen">
-            <!-- add the transparent CSS this div to make the background image transparent -->        
-        </div>
         <div class="fullscreen">
-            <div class="centered">
-                <div class="highScoreTitle">HIGH SCORES</div>
-                <div id="highScoresContainer">
-                </div>
+            <div class="headerText header">HIGH SCORES</div>
+            <div id="highScoresContainer">
             </div>
         </div>
     </div>
     <div class="aboutState">
-        <div class="background fullscreen">
-            <!-- add the transparent CSS this div to make the background image transparent -->        
-        </div>
         <div class="fullscreen">
+            <div class="headerText header">ABOUT</div>
             <div class="centered">
-            About!
             </div>
         </div>
     </div>
@@ -69,7 +61,7 @@
     <script src="js/game/fly.js"></script>
     <script src="js/game/flyFactory.js"></script>
     <script src="js/game/target.js"></script>
-    <script src="js/game/fileSystemWrapper.js"></script>
+    <script src="js/game/utilities.js"></script>
     <script>
         var app;
         function deviceReady() {

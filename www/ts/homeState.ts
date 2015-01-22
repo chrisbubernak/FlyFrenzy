@@ -3,6 +3,7 @@
 /// <reference path="gameState.ts"/>
 /// <reference path="aboutState.ts"/>
 /// <reference path="highScoreState.ts"/>
+/// <reference path="utilities.ts"/>
 
 class HomeState extends State {
 	private static instance: HomeState;
@@ -31,8 +32,18 @@ class HomeState extends State {
         var aboutButton = <any>document.getElementById("aboutButton");
         aboutButton.addEventListener('click', function() { app.ChangeState(AboutState.Instance()); }, false);
 
-        var instance = HomeState.Instance();
-        if(instance.GetUserName() === undefined) {
+
+        if(app.GetClientGuid() === undefined) {
+            if (localStorage.getItem("clientGuid") === null) {
+                var guid = Utilities.GUID();
+                localStorage.setItem("clientGuid", guid);
+                app.SetClientGuid(guid);
+            } else {
+                app.SetClientGuid(localStorage.getItem("clientGuid"));
+            }
+        }
+
+        if(app.GetUserName() === undefined) {
             if (localStorage.getItem("userName") === null) {
                 // make user give us a user name
                 navigator.notification.prompt("Please Enter a Username", function (results) {
@@ -40,16 +51,16 @@ class HomeState extends State {
                     var text = results.input1;
                     if (button === 1) {
                         localStorage.setItem("userName", text);
-                        instance.SetUserName(localStorage.getItem("userName"));
-                        (<any>window).plugins.toast.showShortBottom("Signed in as " + instance.GetUserName());
+                        app.SetUserName(localStorage.getItem("userName"));
+                        (<any>window).plugins.toast.showShortBottom("Signed in as " + app.GetUserName());
                     } else {
                         app.ChangeState(HomeState.Instance());
                     }
                 }, 'Sign In', ['OK', 'Exit'], '');
 
             } else {
-                instance.SetUserName(localStorage.getItem("userName"));
-                (<any>window).plugins.toast.showShortBottom("Signed in as " + instance.GetUserName());
+                app.SetUserName(localStorage.getItem("userName"));
+                (<any>window).plugins.toast.showShortBottom("Signed in as " + app.GetUserName());
             }
         }
     }

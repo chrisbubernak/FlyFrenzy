@@ -1,10 +1,11 @@
 /// <reference path="state.ts"/>
 /// <reference path="homeState.ts"/>
-/// <reference path="fileSystemWrapper.ts"/>
 
 class App implements StateMachine{
 	currentState: State;
-	
+	private userName: string;
+	private clientGuid: string;
+
 	constructor() {
 		this.ChangeState(HomeState.Instance());
 	}
@@ -35,5 +36,21 @@ class App implements StateMachine{
 
 	public OnBack() {
 		this.currentState.OnBack(this);
+	}
+
+	public GetUserName(): string {
+		return this.userName;
+	}
+
+	public SetUserName(userName: string): void {
+		this.userName = userName;
+	}
+
+	public GetClientGuid(): string {
+		return this.clientGuid;
+	}
+
+	public SetClientGuid(clientGuid: string): void {
+		this.clientGuid = clientGuid;
 	}
 }
