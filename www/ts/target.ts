@@ -57,7 +57,7 @@ class Target {
         // however this doesn't happen with absolutely positioned divs so we have to
         // add this...there should be a better way tho!
         div.onclick = function (event) {
-            GameState.Instance().ClickHandler(event);
+            GameState.Instance().handleTouch(event);
         };
 
         this.div = div;

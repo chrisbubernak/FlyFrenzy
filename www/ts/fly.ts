@@ -98,6 +98,7 @@ class Fly {
 
         // todo: are these event listeners getting cleaned up??? need to investigate
         div.addEventListener("touchstart", GameState.Instance().handleTouch, false);
+        div.addEventListener("click", GameState.Instance().handleTouch, false);
 
         document.body.appendChild(div);
         return div;

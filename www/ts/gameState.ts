@@ -23,6 +23,7 @@ class GameState extends State{
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
     private levelDiv: HTMLElement = document.getElementById("levelCounter");
     private stateName: string = "gameState";
+
     // classname for divs that need to be destroyed 
     // during exit (instead of just hidden)
     private temporaryDivsClass: string = "gameStateTemporary";
@@ -31,6 +32,8 @@ class GameState extends State{
     private app: App;
     private scoreGuid: string;
 
+    // boolean that we use as a locking mechanism to not show multiple menus
+    private canLock: boolean = true; 
     public static Instance(): GameState {
         if (typeof GameState.instance === "undefined") {
             GameState.instance = new GameState();
@@ -38,10 +41,6 @@ class GameState extends State{
         return GameState.instance;
     }
 
-    // todo: need to separate logic for Entering game state and starting a new level
-    // the enter code should call start game but we don't want to exit and enter game state
-    // every time we beat a level
-    // this way in Enter we can do things like...set the ScoreGuid
     public Enter(app: App) {
         this.currentLevel = this.startLevel;
         this.scoreGuid = Utilities.GUID();
@@ -55,6 +54,7 @@ class GameState extends State{
 
         var backgroundDiv = document.getElementById("gameStateBackground");
         backgroundDiv.addEventListener('touchstart', this.handleTouch, false);
+        backgroundDiv.addEventListener('click', this.handleTouch, false);
 
         instance.StartLevel();
     }
@@ -77,6 +77,7 @@ class GameState extends State{
 
         var backgroundDiv = document.getElementById("gameStateBackground");
         backgroundDiv.removeEventListener("touchstart", this.handleTouch);
+        backgroundDiv.removeEventListener("click", this.handleTouch);
     }
 
     private StartLevel() {
@@ -122,7 +123,9 @@ class GameState extends State{
 
     public OnResume(app: App) {
         var instance = GameState.Instance();
-        if (this.timeCounter > 0) {
+
+        // use instance.canLock to make sure we arean't locked in a dialog
+        if (this.timeCounter > 0 && instance.canLock) {
             instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
         }
     }
@@ -131,16 +134,16 @@ class GameState extends State{
         app.ChangeState(HomeState.Instance());
     }
 
-    public ClickHandler(event) {
-        GameState.Instance().targets.push(new Target(event.x, event.y));
-    }
-
     public handleTouch(e){
-        var evt = {x: (<any>e).changedTouches[0].pageX,
-            y: (<any>e).changedTouches[0].pageY,
-            radius: Target.radius()};
-        GameState.Instance().ClickHandler(evt);
+        var evt = e;
+        // if it is a touch event transform it to look like a click
+        if (e.changedTouches) { 
+            evt = {x: (<any>e).changedTouches[0].pageX,
+            y: (<any>e).changedTouches[0].pageY};
+        } 
+        evt.radius = Target.radius();
         GameState.Instance().touchList.push(evt); 
+        GameState.Instance().targets.push(new Target(evt.x, evt.y));
     }
 
     private levelFailedDialog(index: number) {
@@ -155,6 +158,8 @@ class GameState extends State{
             // lets just let user re-try the level
             instance.EndLevel();        
         }
+
+        instance.canLock = true;
     }
 
     private levelCompleteDialog(index: number) {
@@ -175,14 +180,16 @@ class GameState extends State{
             // assume user wants the next level
             instance.EndLevel();        
         }   
+
+        instance.canLock = true;
     }
 
     public secondElapse() {
         this.timeCounter--;
         this.updateTime();
-
-        if(this.timeCounter === 0 && this.flies.length > 0) {
-            var instance = GameState.Instance();
+        var instance = GameState.Instance();
+        if(this.timeCounter === 0 && this.flies.length > 0 && instance.canLock) {
+            instance.canLock = false;    
             clearInterval(instance.intervalId);
             navigator.notification.confirm(
                 instance.remainingFlies() + " flies remaining." ,
@@ -207,7 +214,6 @@ class GameState extends State{
         var x = touchObj.x - (flyObj.div.offsetLeft + flyObj.width/2);
         var y = touchObj.y - (flyObj.div.offsetTop + flyObj.height/2);
         var r = touchObj.radius + (flyObj.width + flyObj.height)/4;
-
         if ((x* x) + (y * y) < r * r ) {
             return true;
         }
@@ -271,7 +277,8 @@ class GameState extends State{
                 fly.die();
                 instance.flies.splice(f, 1);
                 instance.remainingToKill--;
-                if (fly.type === "poisonFly") {
+                if (fly.type === "poisonFly" && instance.canLock) {
+                    instance.canLock = false;
                     clearInterval(instance.intervalId);
                         navigator.notification.confirm(
                         "You got poisoned!",
@@ -293,7 +300,8 @@ class GameState extends State{
             }
         }
 
-        if (instance.remainingFlies() === 0) {
+        if (instance.remainingFlies() === 0 && instance.canLock) {
+            instance.canLock = false;
             clearInterval(instance.intervalId);
             navigator.notification.confirm(
                 "Level Completed",
