@@ -29,7 +29,7 @@ class Logger {
 
 			for (var i = 0; i < Logger.Queue.length; i++) {
 				var cur: HTMLDivElement = Logger.Queue[i];
-				cur.style.top = (cur.offsetTop - 12) + "px";
+				cur.style.top = (cur.offsetTop - 18) + "px";
 			}
 		}
 	}

@@ -75,6 +75,7 @@ html, body {
   top: 95vh;
   left: 1vw;
   z-index: 100;
+  background-color: black;
 }
 
 /*
