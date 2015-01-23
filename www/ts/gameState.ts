@@ -98,7 +98,7 @@ class GameState extends State{
         // figure out how many flies actually need to be killed to beat the level
         // poisoned ones don't count!
         for (var i = 0; i < instance.flies.length; i++) {
-            if (instance.flies[i].type === "poisonFly") {
+            if (!instance.flies[i].needToKill) {
                 instance.remainingToKill--;
             }
         }
@@ -134,6 +134,8 @@ class GameState extends State{
         // use instance.canLock to make sure we arean't locked in a dialog
         if (this.timeCounter > 0 && instance.canLock) {
             instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
+        } else if (!instance.canLock) {
+            Logger.LogInfo("unable to get lock");
         }
     }
 
@@ -222,6 +224,8 @@ class GameState extends State{
                     ["Exit"]  
                 );                
             }
+        } else if (!instance.canLock) {
+            Logger.LogInfo("unable to get lock");
         }
     }
 
@@ -306,7 +310,9 @@ class GameState extends State{
             } else {
                 fly.die();
                 instance.flies.splice(f, 1);
-                instance.remainingToKill--;
+                if (fly.needToKill) {
+                    instance.remainingToKill--;
+                }
                 if (fly.type === "poisonFly" && instance.canLock) {
                     instance.canLock = false;
 
@@ -329,6 +335,14 @@ class GameState extends State{
                         );
                     }
                     return;
+                } else if (!instance.canLock) {
+                    Logger.LogInfo("unable to get lock");
+                }
+
+                if(fly.type === "goldFly") {
+                    instance.currentLives++;
+                    instance.updateLives();
+                    (<any>window).plugins.toast.showShortBottom("You gained an extra life!");
                 }
             }
         }
@@ -351,7 +365,9 @@ class GameState extends State{
                 "Great Job!",            
                 ["Next Level", "Exit"]  
             );
-        } 
+        } else if (!instance.canLock) {
+            Logger.LogInfo("unable to get lock");
+        }
 
         instance.gameLoopCounter++;
         if (instance.gameLoopCounter > instance.fps) {

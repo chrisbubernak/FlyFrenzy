@@ -11,13 +11,15 @@ class Fly {
     div: HTMLDivElement;
     moveSpeed: number;
     angle: number;
+    needToKill: boolean; // do we need to kill this fly to beat the level?
 
-    constructor(width: number, moveSpeed: number, totalHealth: number, type: string) {
+    constructor(width: number, moveSpeed: number, totalHealth: number, type: string, needToKill: boolean) {
         this.id = Fly.count;
         Fly.count++;
 
         this.type = type;
         this.width = width;
+        this.needToKill = needToKill;
         this.height = this.width;
         this.moveSpeed = moveSpeed;
         this.totalHealth = totalHealth;
