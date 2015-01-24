@@ -20,10 +20,13 @@ class GameState extends State{
     private targets: Target[];
     private touchList: any[];
     private remainingToKill: number;
+    private livesDiv: HTMLElement = document.getElementById("livesCounter");
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
     private levelDiv: HTMLElement = document.getElementById("levelCounter");
     private stateName: string = "gameState";
-
+    private startLives: number = 3;
+    private currentLives: number;
+    
     // classname for divs that need to be destroyed 
     // during exit (instead of just hidden)
     private temporaryDivsClass: string = "gameStateTemporary";
@@ -34,6 +37,8 @@ class GameState extends State{
 
     // boolean that we use as a locking mechanism to not show multiple menus
     private canLock: boolean = true; 
+
+
     public static Instance(): GameState {
         if (typeof GameState.instance === "undefined") {
             GameState.instance = new GameState();
@@ -56,6 +61,8 @@ class GameState extends State{
         backgroundDiv.addEventListener('touchstart', this.handleTouch, false);
         backgroundDiv.addEventListener('click', this.handleTouch, false);
 
+        instance.currentLives = instance.startLives;
+        instance.canLock = true;
         instance.StartLevel();
     }
 
@@ -74,7 +81,6 @@ class GameState extends State{
             (<HTMLDivElement>temporaryDivs[i]).parentNode.removeChild(temporaryDivs[i]);
         }
 
-
         var backgroundDiv = document.getElementById("gameStateBackground");
         backgroundDiv.removeEventListener("touchstart", this.handleTouch);
         backgroundDiv.removeEventListener("click", this.handleTouch);
@@ -92,12 +98,13 @@ class GameState extends State{
         // figure out how many flies actually need to be killed to beat the level
         // poisoned ones don't count!
         for (var i = 0; i < instance.flies.length; i++) {
-            if (instance.flies[i].type === "poisonFly") {
+            if (!instance.flies[i].needToKill) {
                 instance.remainingToKill--;
             }
         }
 
         instance.updateTime();
+        instance.updateLives();
 
 
         instance.levelDiv.innerHTML = instance.currentLevel.toString();
@@ -127,6 +134,8 @@ class GameState extends State{
         // use instance.canLock to make sure we arean't locked in a dialog
         if (this.timeCounter > 0 && instance.canLock) {
             instance.intervalId = setInterval(instance.run, 1000 / instance.fps);
+        } else if (!instance.canLock) {
+            Logger.LogInfo("unable to get lock");
         }
     }
 
@@ -162,6 +171,14 @@ class GameState extends State{
         instance.canLock = true;
     }
 
+
+    private gameOverDialog(index: number) {
+        var instance = GameState.Instance();
+        // the game is over...no matter what they do go back to home state
+        instance.app.ChangeState(HomeState.Instance());
+        instance.canLock = true;
+    }
+
     private levelCompleteDialog(index: number) {
         var instance = GameState.Instance();
         
@@ -191,12 +208,24 @@ class GameState extends State{
         if(this.timeCounter === 0 && this.flies.length > 0 && instance.canLock) {
             instance.canLock = false;    
             clearInterval(instance.intervalId);
-            navigator.notification.confirm(
-                instance.remainingFlies() + " flies remaining." ,
-                this.levelFailedDialog,
-                "Game Over",            
-                ["Try Again", "Exit"]  
-            );
+            instance.currentLives--;
+            if (instance.currentLives > 0) {
+                navigator.notification.confirm(
+                    instance.remainingFlies() + " flies remaining." ,
+                    this.levelFailedDialog,
+                    "Try Again?",            
+                    ["Yes", "No"]  
+                );
+            } else {
+                navigator.notification.confirm(
+                    "You ran out of time!",
+                    instance.gameOverDialog,
+                    "Game Over!",            
+                    ["Exit"]  
+                );                
+            }
+        } else if (!instance.canLock) {
+            Logger.LogInfo("unable to get lock");
         }
     }
 
@@ -208,6 +237,10 @@ class GameState extends State{
         this.timeDiv.innerHTML = this.timeCounter.toString();
     }
 
+    private updateLives() {
+        this.livesDiv.innerHTML = this.currentLives.toString();
+    }
+
     private collides(touchObj, flyObj): boolean {
         // todo: game objects should have a uniform interface so that we can just check collisions
         // between objects instead of this special cased touchObj v flyObj check
@@ -215,6 +248,7 @@ class GameState extends State{
         var y = touchObj.y - (flyObj.div.offsetTop + flyObj.height/2);
         var r = touchObj.radius + (flyObj.width + flyObj.height)/4;
         if ((x* x) + (y * y) < r * r ) {
+            Logger.Log("Collision! " + x + " " + y + " " + r);
             return true;
         }
         return false;
@@ -276,17 +310,39 @@ class GameState extends State{
             } else {
                 fly.die();
                 instance.flies.splice(f, 1);
-                instance.remainingToKill--;
+                if (fly.needToKill) {
+                    instance.remainingToKill--;
+                }
                 if (fly.type === "poisonFly" && instance.canLock) {
                     instance.canLock = false;
+
+                    instance.currentLives--;
                     clearInterval(instance.intervalId);
+
+                    if (instance.currentLives > 0) {
                         navigator.notification.confirm(
-                        "You got poisoned!",
-                        instance.levelFailedDialog,
-                        "Game Over!",            
-                        ["Try Again", "Exit"]  
-                    );
+                            "You got poisoned!",
+                            instance.levelFailedDialog,
+                            "Try Again?",            
+                            ["Yes", "No"]  
+                        );
+                    } else {
+                        navigator.notification.confirm(
+                            "You got poisoned!",
+                            instance.gameOverDialog,
+                            "Game Over!",            
+                            ["Exit"]  
+                        );
+                    }
                     return;
+                } else if (!instance.canLock) {
+                    Logger.LogInfo("unable to get lock");
+                }
+
+                if(fly.type === "goldFly") {
+                    instance.currentLives++;
+                    instance.updateLives();
+                    (<any>window).plugins.toast.showShortBottom("You gained an extra life!");
                 }
             }
         }
@@ -309,7 +365,9 @@ class GameState extends State{
                 "Great Job!",            
                 ["Next Level", "Exit"]  
             );
-        } 
+        } else if (!instance.canLock) {
+            Logger.LogInfo("unable to get lock");
+        }
 
         instance.gameLoopCounter++;
         if (instance.gameLoopCounter > instance.fps) {

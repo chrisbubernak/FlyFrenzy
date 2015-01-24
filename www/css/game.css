@@ -69,6 +69,15 @@ html, body {
   display: none;
 }
 
+.debugMessage {
+  position: absolute;
+  font-size: 1em;
+  top: 95vh;
+  left: 1vw;
+  z-index: 100;
+  background-color: black;
+}
+
 /*
  * HOME CSS
  */
@@ -215,6 +224,13 @@ html, body {
   background-size: cover;
 }
 
+.goldFly {
+  position: absolute;
+  background-image: url(../img/goldFly.png);
+  background-size: cover;
+}
+
+
 @-webkit-keyframes splat {
     from {opacity: 1;}
     to {opacity: 0;}
@@ -287,6 +303,18 @@ html, body {
 .fly.splat {
   position: absolute;
   background-image: url(../img/splat.png), url(../img/fly.png);
+  background-size: cover;
+
+  animation:splat 3s 1;
+  -webkit-animation:splat 3s 1;
+  animation-fill-mode: forwards;  
+  -webkit-animation-fill-mode: forwards;
+}
+
+
+.goldFly.splat {
+  position: absolute;
+  background-image: url(../img/splat.png), url(../img/goldFly.png);
   background-size: cover;
 
   animation:splat 3s 1;

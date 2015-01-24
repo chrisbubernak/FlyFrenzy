@@ -16,6 +16,9 @@
         <div id="levelContainer" class="gameText">
             <div class="inline">Level: </div><div class="inline" id="levelCounter"></div>
         </div>
+        <div id="livesContainer" class="gameText">
+            <div class="inline">Lives: </div><div class="inline" id="livesCounter"></div>
+        </div>
     </div>
     <div class="homeState">
         <div class="background fullscreen">
@@ -28,7 +31,7 @@
                 <div id="startButton" class="button firstButton">Start</div>
                 <div id="highScoreButton" class="button">High Scores</div>
                 <div id="aboutButton" class="button">About</div>
-                <div class="footerText">Version 0.1.2</div>
+                <div class="footerText">Version 0.1.3</div>
             </div>
         </div>
     </div>
@@ -43,6 +46,12 @@
         <div class="fullscreen">
             <div class="headerText header">ABOUT</div>
             <div class="centered">
+            <p>
+                Kill off all the flies to advance to the next level.
+            </p>
+            <p>
+                Beware, some of them might poison you!
+            </p>
             </div>
         </div>
     </div>
@@ -62,6 +71,8 @@
     <script src="js/game/flyFactory.js"></script>
     <script src="js/game/target.js"></script>
     <script src="js/game/utilities.js"></script>
+    <script src="js/game/logger.js"></script>
+
     <script>
         var app;
         function deviceReady() {

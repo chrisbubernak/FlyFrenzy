@@ -1,32 +1,33 @@
 /// <reference path="stateMachine.ts"/>
+/// <reference path="logger.ts"/>
 
 class State {
 	public static Instance(): State {
-		alert("Instance() not implemented");
+		Logger.LogError("Instance() not implemented");
 		return new State();
 	}
 
 	public Enter(stateMachine: StateMachine): void {
-		alert("Enter() not implemented");
+		Logger.LogError("Enter() not implemented");
 	}
 
 	public Exit(stateMachine: StateMachine): void {
-		alert("Exit() not implemented");
+		Logger.LogError("Exit() not implemented");
 	}
 
 	public Execute(stateMachine: StateMachine): void {
-		alert("Execute() not implemented");
+		Logger.LogError("Execute() not implemented");
 	}
 
 	public OnPause(stateMachine: StateMachine): void {
-		alert("OnPause() not implemented");
+		Logger.LogError("OnPause() not implemented");
 	}
 
 	public OnResume(stateMachine: StateMachine): void {
-		alert("OnResume() not implemented");
+		Logger.LogError("OnResume() not implemented");
 	}
 
 	public OnBack(stateMachine: StateMachine): void {
-		alert("OnBack() not implemented");
+		Logger.LogError("OnBack() not implemented");
 	}
 }
