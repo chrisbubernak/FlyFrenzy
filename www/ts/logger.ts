@@ -4,9 +4,10 @@ class Logger {
 	private static MaxQueueLength = 6;
 
 	public static LogInColor(text: string, color: string) {
-		// todo: change this to be something set to true
-		// for debug builds and false for release builds
-		if (true) {
+		// when compiled with jake compile -release 
+		// IS_DEBUG gets turned into false in the outputted js
+		var IS_DEBUG = true;
+		if (IS_DEBUG) {
 			var time = new Date();
 			var timeString = time.getHours() + ":" + 
 				time.getMinutes() + ":" +

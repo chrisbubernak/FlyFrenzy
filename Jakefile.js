@@ -1,5 +1,5 @@
 var fs = require("fs");
-
+var replace = require("replace");
 var tsSrc = "www/ts/";
 var jsDest = "www/js/";
 
@@ -103,7 +103,7 @@ task('wp8', [], function (params) {
 });
 
 desc('Compiles TS files into JS');
-task('compile', [], function (params) {
+task('compile', [], function (param) {
 	var path = './www/ts/';
 	var dirs = fs.readdirSync(path);
 	/* b/c of the references everything gets compiled just by compiling this */
@@ -114,6 +114,18 @@ task('compile', [], function (params) {
 		var c = ['for /R .\\www\\ts\\ %f in (*.js) do move %f .\\www\\js\\game\\']; 
 		jake.exec(c, {printStdout: true}, function() {
 			complete();
+			if (param === 'release') {
+				// for now we know that the only debug statement is in the logger so just look
+    			// there
+				var file = './www/js/game/logger.js';
+			  	replace({
+			    	regex: "var IS_DEBUG = true;",
+			    	replacement: "var IS_DEBUG = false;",
+			    	paths: [file],
+			    	recursive: true,
+			    	silent: true,
+				});
+			}
 			console.log('Successfully compiled and moved files!');
 		});
 	});  
