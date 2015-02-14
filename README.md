@@ -15,7 +15,7 @@ A mobile game written in TypeScript using Cordova framework for Android and Wind
 
 11/24/2014 - Deployed alpha version 0.0.0.8 to the Google Play & Windows Phone store (added support for in game ads to pay the bills).
 
-## Setups
+## Setup
 
 * Clone the Repo
 * install [win phone 8 sdk](http://dev.windows.com/en-us/develop/download-phone-sdk)
@@ -25,7 +25,9 @@ A mobile game written in TypeScript using Cordova framework for Android and Wind
 * npm install jake -g
 * npm install
 * jake init
-* depending on your setup you might need add a few locations to your path for everything to work right
+* jake compile
+* ...now you can go build, emulate, deploy!
+Note: depending on your setup you might need add a few locations to your path for everything to work right
 
 ## Commands
 
