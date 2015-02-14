@@ -14,16 +14,7 @@
 /// <reference path="plugins/DeviceOrientation.d.ts"/>
 /// <reference path="plugins/Dialogs.d.ts"/>
 /// <reference path="plugins/FileSystem.d.ts"/>
-/// <reference path="plugins/FileTransfer.d.ts"/>
-/// <reference path="plugins/Globalization.d.ts"/>
-/// <reference path="plugins/InAppBrowser.d.ts"/>
-/// <reference path="plugins/Media.d.ts"/>
-/// <reference path="plugins/MediaCapture.d.ts"/>
-/// <reference path="plugins/NetworkInformation.d.ts"/>
-/// <reference path="plugins/Push.d.ts"/>
-/// <reference path="plugins/Splashscreen.d.ts"/>
 /// <reference path="plugins/Vibration.d.ts"/>
-/// <reference path="plugins/WebSQL.d.ts"/>
 
 interface Cordova {
     /** Invokes native functionality by specifying corresponding service name, action and optional parameters.

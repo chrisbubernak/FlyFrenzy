@@ -3,6 +3,8 @@ FlyFrenzy
 
 A mobile game written in TypeScript using Cordova framework for Android and Windows Phone. Please contact me if you'd like to get access to the private alpha & beta releases.
 
+## Releases
+
 1/24/2015 - Update: Deployed alpha version 13... added limited number of lifes & golden flies
 
 12/29/2014 - Deployed alpha version 11... added usernames (no password for now) and global high scores
@@ -13,19 +15,30 @@ A mobile game written in TypeScript using Cordova framework for Android and Wind
 
 11/24/2014 - Deployed alpha version 0.0.0.8 to the Google Play & Windows Phone store (added support for in game ads to pay the bills).
 
+## Setups
 
-COMMANDS:
+* Clone the Repo
+* install [win phone 8 sdk](http://dev.windows.com/en-us/develop/download-phone-sdk)
+* install [android sdk](http://developer.android.com/sdk/installing/index.html?pkg=tools)
+* launch the sdk tools and install version 19
+* npm install cordova -g
+* npm install jake -g
+* npm install
+* jake init
+* depending on your setup you might need add a few locations to your path for everything to work right
 
-jake init - must be run before anything else...adds the android & wp8 platforms and all plugins the game depends on
+## Commands
 
-jake android - builds the android release APK and moves it to releaseBuilds/ folder (requires the my-release-key.keystore file)
+* jake init - must be run before anything else...adds the android & wp8 platforms and all plugins the game depends on
 
-jake wp8 - builds the wp8 release XAP and moves it to releaseBuilds/ folder
+* jake android - builds the android release APK and moves it to releaseBuilds/ folder (requires the my-release-key.keystore file)
 
-cordova build android - builds a debug android APK
+* jake wp8 - builds the wp8 release XAP and moves it to releaseBuilds/ folder
 
-cordova build wp8 - builds a debug wp8 XAP
+* cordova build android - builds a debug android APK
 
-cordova emulate android - builds an android APK and launches it in emulator
+* cordova build wp8 - builds a debug wp8 XAP
 
-cordova emulate wp8 - builds a wp8 XAP and launches it in emulator
+* cordova emulate android - builds an android APK and launches it in emulator
+
+* cordova emulate wp8 - builds a wp8 XAP and launches it in emulator

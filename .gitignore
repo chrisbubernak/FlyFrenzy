@@ -1,8 +1,10 @@
 platforms/
 plugins/
+!www/ts/definitions/cordova/plugins
 my-release-key.keystore
 releaseBuilds/
 Thumbs.db
 www/img/Thumbs.db
 releaseImages/Thumbs.db
 www/js/game/*
+node_modules/
