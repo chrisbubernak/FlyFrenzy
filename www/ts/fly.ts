@@ -1,4 +1,5 @@
 /// <reference path="gameState.ts"/>
+/// <reference path="cordovaWrapper.ts"/>
 
 class Fly {
     static count: number = 0;
@@ -84,7 +85,7 @@ class Fly {
 
         // remove the html element
         (<HTMLDivElement>this.div).parentNode.removeChild(this.div); 
-        (<any>navigator).vibrate(150);
+        CordovaWrapper.vibrate(150);
     }
 
     // todo: move this part out to a helper class for creating divs
@@ -108,6 +109,6 @@ class Fly {
 
     public clicked() {
         this.healthRemaining--;
-        (<any>navigator).vibrate(50);
+        CordovaWrapper.vibrate(50);
     }
 } 

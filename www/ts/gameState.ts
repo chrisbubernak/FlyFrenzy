@@ -4,8 +4,7 @@
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
 /// <reference path="utilities.ts"/>
-/// <reference path="definitions/cordova/cordova.d.ts"/>
-/// <reference path="definitions/cordova/plugins/Dialogs.d.ts"/>
+/// <reference path="cordovaWrapper.ts"/>
 
 class GameState extends State{
     public maxLeft: number = window.innerWidth;
@@ -210,14 +209,14 @@ class GameState extends State{
             clearInterval(instance.intervalId);
             instance.currentLives--;
             if (instance.currentLives > 0) {
-                navigator.notification.confirm(
+                CordovaWrapper.confirm(
                     instance.remainingFlies() + " flies remaining." ,
                     this.levelFailedDialog,
                     "Try Again?",            
                     ["Yes", "No"]  
                 );
             } else {
-                navigator.notification.confirm(
+                CordovaWrapper.confirm(
                     "You ran out of time!",
                     instance.gameOverDialog,
                     "Game Over!",            
@@ -276,10 +275,10 @@ class GameState extends State{
         request.onreadystatechange = function() {
             if(request.readyState == 4 && request.status == 200) {
                 if (JSON.parse(request.responseText).newHighScore) {
-                    (<any>window).plugins.toast.showShortBottom("New High Score!");
+                    CordovaWrapper.toastShortBottom("New High Score!");
                 }
             } else if (request.readyState == 4 ){
-                (<any>window).plugins.toast.showShortBottom("Error: " + request.responseText);
+                CordovaWrapper.toastShortBottom("Error: " + request.responseText);
             }
         }
         request.send();
@@ -320,14 +319,14 @@ class GameState extends State{
                     clearInterval(instance.intervalId);
 
                     if (instance.currentLives > 0) {
-                        navigator.notification.confirm(
+                        CordovaWrapper.confirm(
                             "You got poisoned!",
                             instance.levelFailedDialog,
                             "Try Again?",            
                             ["Yes", "No"]  
                         );
                     } else {
-                        navigator.notification.confirm(
+                        CordovaWrapper.confirm(
                             "You got poisoned!",
                             instance.gameOverDialog,
                             "Game Over!",            
@@ -342,7 +341,7 @@ class GameState extends State{
                 if(fly.type === "goldFly") {
                     instance.currentLives++;
                     instance.updateLives();
-                    (<any>window).plugins.toast.showShortBottom("You gained an extra life!");
+                    CordovaWrapper.toastShortBottom("You gained an extra life!");
                 }
             }
         }
@@ -359,7 +358,7 @@ class GameState extends State{
         if (instance.remainingFlies() === 0 && instance.canLock) {
             instance.canLock = false;
             clearInterval(instance.intervalId);
-            navigator.notification.confirm(
+            CordovaWrapper.confirm(
                 "Level Completed",
                 instance.levelCompleteDialog,
                 "Great Job!",            

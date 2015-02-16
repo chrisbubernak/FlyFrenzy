@@ -55,6 +55,7 @@
             </div>
         </div>
     </div>
+
     <!-- Cordova reference, this is added to your app when it's built. -->
     <script src="cordova.js"></script>
     <!--<script src="scripts/platformOverrides.js"></script>-->
@@ -72,53 +73,22 @@
     <script src="js/game/target.js"></script>
     <script src="js/game/utilities.js"></script>
     <script src="js/game/logger.js"></script>
+    <script src="js/game/cordovaWrapper.js"></script>
 
     <script>
         var app;
+        
         function deviceReady() {
             app = new App();
-            document.addEventListener(
-                "backbutton", onBack, false);
-            document.addEventListener("pause", onPause, false);
-            document.addEventListener("resume", onResume, false);
-            initAds();
-        }
-        document.addEventListener("deviceready", deviceReady, false);
-        
-        function onBack() {
-            app.OnBack();
         }
 
-        function onResume() {
-            app.OnResume();
+        if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/)) {
+            document.addEventListener("deviceready", deviceReady, false);
+        } else {
+            CordovaWrapper.runningInBrowser = true;
+            deviceReady(); //this is the browser
         }
 
-        function onPause() {
-            app.OnPause();
-        }
-
-        function initAds() {
-            var android = "ca-app-pub-8670772325508169/8169230735";
-            var wp8 = "ca-app-pub-8670772325508169/4310780735";
-            var ios = ""; // just in case we support ios some day...
-            var bannerId = "";
-            if( /(android)/i.test(navigator.userAgent) ) {
-                bannerId = android;
-            } else if(/(iphone|ipad)/i.test(navigator.userAgent)) {
-                bannerId = ios;
-            } else {
-                bannerId = wp8;
-            }
-            window.plugins.AdMob.setOptions( {
-                publisherId: bannerId,
-                bannerAtTop: false, // set to true, to put banner at top
-                overlap: true, // set to true, to allow banner overlap webview
-                offsetTopBar: false, // set to true to avoid ios7 status bar overlap
-                isTesting: false, // receiving test ad
-                autoShow: true // auto show interstitial ad when loaded
-            });
-            window.plugins.AdMob.createBannerView();
-        }
     </script>
 
 </body>

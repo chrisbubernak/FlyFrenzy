@@ -5,6 +5,7 @@
 /// <reference path="highScoreState.ts"/>
 /// <reference path="utilities.ts"/>
 /// <reference path="logger.ts"/>
+/// <reference path="cordovaWrapper.ts"/>
 
 class HomeState extends State {
 	private static instance: HomeState;
@@ -46,13 +47,13 @@ class HomeState extends State {
         if(app.GetUserName() === undefined) {
             if (localStorage.getItem("userName") === null) {
                 // make user give us a user name
-                navigator.notification.prompt("Please Enter a Username", function (results) {
+                CordovaWrapper.prompt("Please Enter a Username", function (results) {
                     var button = results.buttonIndex;
                     var text = results.input1;
                     if (button === 1) {
                         localStorage.setItem("userName", text);
                         app.SetUserName(localStorage.getItem("userName"));
-                        (<any>window).plugins.toast.showShortBottom("Signed in as " + app.GetUserName());
+                        CordovaWrapper.toastShortBottom("Signed in as " + app.GetUserName());
                     } else {
                         app.ChangeState(HomeState.Instance());
                     }
@@ -60,7 +61,7 @@ class HomeState extends State {
 
             } else {
                 app.SetUserName(localStorage.getItem("userName"));
-                (<any>window).plugins.toast.showShortBottom("Signed in as " + app.GetUserName());
+                CordovaWrapper.toastShortBottom("Signed in as " + app.GetUserName());
             }
         }
     }
@@ -85,13 +86,13 @@ class HomeState extends State {
     }
 
     public OnBack(app: App) {
-        (<any>navigator).app.exitApp();
+        CordovaWrapper.exitApp();
     }
 
     public OnPause(app: App) {
         // from the home screen there is really no 
         // sense to pause just exit the app
-        (<any>navigator).app.exitApp();
+        CordovaWrapper.exitApp();
     }
 
     public GetUserName(): string {

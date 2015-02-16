@@ -1,6 +1,7 @@
 /// <reference path="state.ts"/>
 /// <reference path="homeState.ts"/>
 /// <reference path="app.ts"/>
+/// <reference path="cordovaWrapper.ts"/>
 
 class HighScoreState extends State {
 	private static instance: HighScoreState;
@@ -72,7 +73,7 @@ class HighScoreState extends State {
             if(request.readyState == 4 && request.status == 200) {
                 instance.DrawHighScores(JSON.parse(request.responseText));
             } else if (request.readyState == 4 ){
-                (<any>window).plugins.toast.showShortBottom("Unable to communicate with game server.");
+                CordovaWrapper.toastShortBottom("Unable to communicate with game server.");
                 Logger.LogError(request.responseText);
             }
         }

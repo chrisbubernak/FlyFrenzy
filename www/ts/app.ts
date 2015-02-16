@@ -1,6 +1,7 @@
 /// <reference path="state.ts"/>
 /// <reference path="logger.ts"/>
 /// <reference path="homeState.ts"/>
+/// <reference path="cordovaWrapper.ts"/>
 
 class App implements StateMachine{
 	currentState: State;
@@ -8,6 +9,11 @@ class App implements StateMachine{
 	private clientGuid: string;
 
 	constructor() {
+		var that = this;
+		document.addEventListener("backbutton", function() { that.OnBack(); }, false);
+        document.addEventListener("pause", function() { that.OnPause(); }, false);
+        document.addEventListener("resume", function() { that.OnResume; }, false);
+        CordovaWrapper.initAds();
 		this.ChangeState(HomeState.Instance());
 	}
 
