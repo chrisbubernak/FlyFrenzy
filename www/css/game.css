@@ -51,6 +51,10 @@ html, body {
   background-image: url(../img/background.png);
   -webkit-background-size: cover;
   background-size: cover;
+
+  /*height: 95%;
+  background-size: 100% 100%;
+  background-size: cover;*/
 }
 
 .gameState {
@@ -122,6 +126,7 @@ html, body {
 }
 
 .menuFly {
+  margin-top: 10vh;
   max-height: 45vw;
 }
 
