@@ -247,7 +247,6 @@ class GameState extends State{
         var y = touchObj.y - (flyObj.div.offsetTop + flyObj.height/2);
         var r = touchObj.radius + (flyObj.width + flyObj.height)/4;
         if ((x* x) + (y * y) < r * r ) {
-            Logger.Log("Collision! " + x + " " + y + " " + r);
             return true;
         }
         return false;
@@ -273,7 +272,7 @@ class GameState extends State{
             "&scoreGuid=" + scoreGuid;
         request.open('POST', url, true);
         request.onreadystatechange = function() {
-            if(request.readyState == 4 && request.status == 200) {
+            if(request.readyState === 4 && request.status === 200) {
                 if (JSON.parse(request.responseText).newHighScore) {
                     CordovaWrapper.toastShortBottom("New High Score!");
                 }

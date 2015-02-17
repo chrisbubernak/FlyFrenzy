@@ -12,7 +12,6 @@ class CordovaWrapper {
 			return;
 		}
 
-
 		navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
 	}
 
