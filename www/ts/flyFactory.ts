@@ -5,8 +5,9 @@ class FlyFactory {
 
 	public static CreateFliesForLevel(level: number): Fly[] {
 		var flies = [];
+
 		for (var i = 0; i < 8; i++) {
-			flies.push(FlyFactory.CreateRegularFly());
+			flies.push(FlyFactory.CreateExplosiveFly());
 		}
 
 		for (var i = 0; i < Math.floor((level + 1)/ 3); i++) {

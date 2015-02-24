@@ -1,5 +1,6 @@
 /// <reference path="fly.ts"/>
 /// <reference path="target.ts"/>
+/// <reference path="explosion.ts"/>
 /// <reference path="flyFactory.ts"/>
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
@@ -17,6 +18,7 @@ class GameState extends State{
     private fps: number = 20;
     private flies: Fly[];
     private targets: Target[];
+    private explosions: Explosion[];
     private touchList: any[];
     private remainingToKill: number;
     private livesDiv: HTMLElement = document.getElementById("livesCounter");
@@ -91,6 +93,7 @@ class GameState extends State{
         instance.gameLoopCounter = 0;
         instance.targets = [];
         instance.touchList = [];
+        instance.explosions = [];
         
         instance.flies = FlyFactory.CreateFliesForLevel(instance.currentLevel);
         instance.remainingToKill = instance.flies.length;
@@ -287,6 +290,13 @@ class GameState extends State{
         return this.scoreGuid;
     }
 
+    private createExplosion(fly: Fly) {
+        var x: number = parseInt(fly.div.style.left) + fly.width / 2;
+        var y: number = parseInt(fly.div.style.top) + fly.height / 2;
+        var instance = GameState.Instance();
+        instance.explosions.push(new Explosion(x, y));
+    }
+
     private run () {
         var instance = GameState.Instance();
 
@@ -306,6 +316,17 @@ class GameState extends State{
             if (fly.healthRemaining > 0) { 
                 fly.move();
             } else {
+
+                if(fly.type === "goldFly") {
+                    instance.currentLives++;
+                    instance.updateLives();
+                    CordovaWrapper.toastShortBottom("You gained an extra life!");
+                }
+
+                if(fly.type === "explosiveFly") {
+                    instance.createExplosion(fly);
+                }
+
                 fly.die();
                 instance.flies.splice(f, 1);
                 if (fly.needToKill) {
@@ -336,12 +357,16 @@ class GameState extends State{
                 } else if (!instance.canLock) {
                     Logger.LogInfo("unable to get lock");
                 }
+            }
+        }
 
-                if(fly.type === "goldFly") {
-                    instance.currentLives++;
-                    instance.updateLives();
-                    CordovaWrapper.toastShortBottom("You gained an extra life!");
-                }
+        var e = instance.explosions.length;
+        while (e--) {
+            var explosion = instance.explosions[e];
+            explosion.update();
+            if (explosion.isExpired()) {
+                instance.explosions[e].destroy();
+                instance.explosions.splice(e, 1);
             }
         }
 

@@ -72,6 +72,7 @@ class Fly {
     public die(): void {
         var x = this.div.offsetLeft;
         var y = this.div.offsetTop;
+
         // create blood splat div
         var div = document.createElement("div");
         div.style.top = y + "px";
