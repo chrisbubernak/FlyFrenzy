@@ -35,7 +35,12 @@ class HomeState extends State {
         aboutButton.addEventListener('click', function() { app.ChangeState(AboutState.Instance()); }, false);
 
         if(app.GetClientGuid() === undefined) {
-            if (localStorage.getItem("clientGuid") === null) {
+        	if (!localStorage) {
+        		Logger.LogError("No Local Storage Available...");
+        		var guid = Utilities.GUID();
+                app.SetClientGuid(guid);
+        	}
+            else if (localStorage.getItem("clientGuid") === null) {
                 var guid = Utilities.GUID();
                 localStorage.setItem("clientGuid", guid);
                 app.SetClientGuid(guid);
@@ -45,7 +50,21 @@ class HomeState extends State {
         }
 
         if(app.GetUserName() === undefined) {
-            if (localStorage.getItem("userName") === null) {
+        	if (!localStorage) {
+        		Logger.LogError("No Local Storage Available...");
+        		// make user give us a user name
+                CordovaWrapper.prompt("Please Enter a Username", function (results) {
+                    var button = results.buttonIndex;
+                    var text = results.input1;
+                    if (button === 1) {
+                        app.SetUserName(text);
+                        CordovaWrapper.toastShortBottom("Signed in as " + app.GetUserName());
+                    } else {
+                        app.ChangeState(HomeState.Instance());
+                    }
+                }, 'Sign In', ['OK', 'Exit'], '');
+        	}
+            else if (localStorage.getItem("userName") === null) {
                 // make user give us a user name
                 CordovaWrapper.prompt("Please Enter a Username", function (results) {
                     var button = results.buttonIndex;

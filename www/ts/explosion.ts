@@ -14,8 +14,6 @@ class Explosion {
 	private expired = false;
 
 	constructor(x: number, y: number) {
-		Logger.Log(x.toString());
-		Logger.Log(y.toString());
 		this.createDiv(x, y);
 	}
 
