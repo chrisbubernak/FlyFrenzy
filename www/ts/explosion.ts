@@ -2,14 +2,14 @@
 /// <reference path="logger.ts"/>
 
 class Explosion {
-	static width: number = GameState.Instance().maxLeft / 12;
+	static width: number = GameState.Instance().maxLeft / 5;
 	static type: string = "explosion";
 	height: number = Explosion.width;
 	private x: number;
 	private y: number;
 	private borderSize: number = Explosion.width / 10;
 	private div: HTMLDivElement;
-	private timerStart: number = 20; // the number of frames the target is on screen before it disappears
+	private timerStart: number = 10; // the number of frames the target is on screen before it disappears
 	private timer: number = this.timerStart;
 	private expired = false;
 
@@ -19,7 +19,7 @@ class Explosion {
 
 	public update() {
 		var ratio = (this.timer/this.timerStart);
-		var curWidth = Target.width *  (1 - ratio);
+		var curWidth = Explosion.width *  (1 - ratio);
 		this.div.style.width = curWidth + "px";
 		this.div.style.height = curWidth + "px";
 		this.div.style.top = (this.y - curWidth / 2 - this.borderSize) + "px";
@@ -42,7 +42,8 @@ class Explosion {
 
 		div.style.top = (this.y - this.borderSize) + "px";
         div.style.left = (this.x - this.borderSize) + "px";
-        div.style.border = this.borderSize + "px solid #FFF";
+        div.style.backgroundColor = "yellow";
+        div.style.border = this.borderSize + "px solid red";
         div.style.borderRadius = "50%";
 
         div.classList.add(Explosion.type);
