@@ -146,15 +146,23 @@ class GameState extends State{
     }
 
     public handleTouch(e){
-        var evt = e;
-        // if it is a touch event transform it to look like a click
-        if (e.changedTouches) { 
-            evt = {x: (<any>e).changedTouches[0].pageX,
-            y: (<any>e).changedTouches[0].pageY};
-        } 
-        evt.radius = Target.radius();
-        GameState.Instance().touchList.push(evt); 
-        GameState.Instance().targets.push(new Target(evt.x, evt.y));
+        var posx = 0;
+        var posy = 0;
+        if (!e) {return;}
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+            posy = e.pageY;
+        }
+        else if (e.clientX || e.clientY)    {
+            posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        }
+        e.x = posx;
+        e.y = posy;
+        e.radius = Target.radius();
+        GameState.Instance().touchList.push(e);
+        GameState.Instance().targets.push(new Target(posx, posy));
+        Logger.Log(posx + " " + posy);
     }
 
     private levelFailedDialog(index: number) {
