@@ -261,6 +261,7 @@ html, body {
 
 .explosion {
   position: absolute;
+  z-index: 1;
 }
 
 .fly {
