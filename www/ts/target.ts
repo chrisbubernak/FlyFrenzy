@@ -2,9 +2,9 @@
 
 class Target {
 	static width: number = GameState.Instance().maxLeft / 12;
+	static type: string = "target";
 	height: number = Target.width;
 	borderSize: number = Target.width / 10;
-	type: string = "target";
 	timerStart: number = 10; // the number of frames the target is on screen before it disappears
 	timer: number = this.timerStart;
 	div: HTMLDivElement;
@@ -48,7 +48,7 @@ class Target {
         div.style.border = this.borderSize + "px solid #B01E00";
         div.style.borderRadius = "50%";
 
-        div.classList.add(this.type);
+        div.classList.add(Target.type);
         div.classList.add("gameStateTemporary");
 
         document.body.appendChild(div);

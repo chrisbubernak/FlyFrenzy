@@ -1,5 +1,6 @@
 /// <reference path="fly.ts"/>
 /// <reference path="target.ts"/>
+/// <reference path="explosion.ts"/>
 /// <reference path="flyFactory.ts"/>
 /// <reference path="state.ts"/>
 /// <reference path="app.ts"/>
@@ -17,6 +18,7 @@ class GameState extends State{
     private fps: number = 20;
     private flies: Fly[];
     private targets: Target[];
+    private explosions: Explosion[];
     private touchList: any[];
     private remainingToKill: number;
     private livesDiv: HTMLElement = document.getElementById("livesCounter");
@@ -91,6 +93,7 @@ class GameState extends State{
         instance.gameLoopCounter = 0;
         instance.targets = [];
         instance.touchList = [];
+        instance.explosions = [];
         
         instance.flies = FlyFactory.CreateFliesForLevel(instance.currentLevel);
         instance.remainingToKill = instance.flies.length;
@@ -143,15 +146,22 @@ class GameState extends State{
     }
 
     public handleTouch(e){
-        var evt = e;
-        // if it is a touch event transform it to look like a click
-        if (e.changedTouches) { 
-            evt = {x: (<any>e).changedTouches[0].pageX,
-            y: (<any>e).changedTouches[0].pageY};
-        } 
-        evt.radius = Target.radius();
-        GameState.Instance().touchList.push(evt); 
-        GameState.Instance().targets.push(new Target(evt.x, evt.y));
+        var posx = 0;
+        var posy = 0;
+        if (!e) {return;}
+        if (e.pageX || e.pageY) {
+            posx = e.pageX;
+            posy = e.pageY;
+        }
+        else if (e.clientX || e.clientY)    {
+            posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        }
+        e.x = posx;
+        e.y = posy;
+        e.radius = Target.radius();
+        GameState.Instance().touchList.push(e);
+        GameState.Instance().targets.push(new Target(posx, posy));
     }
 
     private levelFailedDialog(index: number) {
@@ -287,12 +297,22 @@ class GameState extends State{
         return this.scoreGuid;
     }
 
+    private createExplosion(fly: Fly) {
+        var x: number = parseInt(fly.div.style.left) + fly.width / 2;
+        var y: number = parseInt(fly.div.style.top) + fly.height / 2;
+        var instance = GameState.Instance();
+        instance.explosions.push(new Explosion(x, y));
+    }
+
     private run () {
         var instance = GameState.Instance();
 
         // go through all the touches that have happened in the last game frame and check them vs all flies 
         // O(flyCount*touchCount) runtime which isn't ideal...but might be ok for now
+
+        // also go through all explosions and do the same
         var touches = instance.touchList;
+        var explosions = instance.explosions;
         var deadFlies: number = 0;
         for (var f = instance.flies.length - 1; f >= 0; f--) {
             var fly = instance.flies[f];
@@ -303,9 +323,26 @@ class GameState extends State{
                 }
             }
 
+            for (var e = 0; e < explosions.length; e++) {
+                if (instance.collides(explosions[e], fly)) {
+                    fly.clicked();
+                }
+            }
+
             if (fly.healthRemaining > 0) { 
                 fly.move();
             } else {
+
+                if(fly.type === "goldFly") {
+                    instance.currentLives++;
+                    instance.updateLives();
+                    CordovaWrapper.toastShortBottom("You gained an extra life!");
+                }
+
+                if(fly.type === "explosiveFly") {
+                    instance.createExplosion(fly);
+                }
+
                 fly.die();
                 instance.flies.splice(f, 1);
                 if (fly.needToKill) {
@@ -336,12 +373,16 @@ class GameState extends State{
                 } else if (!instance.canLock) {
                     Logger.LogInfo("unable to get lock");
                 }
+            }
+        }
 
-                if(fly.type === "goldFly") {
-                    instance.currentLives++;
-                    instance.updateLives();
-                    CordovaWrapper.toastShortBottom("You gained an extra life!");
-                }
+        var e = instance.explosions.length;
+        while (e--) {
+            var explosion = instance.explosions[e];
+            explosion.update();
+            if (explosion.isExpired()) {
+                instance.explosions[e].destroy();
+                instance.explosions.splice(e, 1);
             }
         }
 

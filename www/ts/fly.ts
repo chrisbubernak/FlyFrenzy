@@ -13,6 +13,7 @@ class Fly {
     moveSpeed: number;
     angle: number;
     needToKill: boolean; // do we need to kill this fly to beat the level?
+    bleeds: boolean = true;
 
     constructor(width: number, moveSpeed: number, totalHealth: number, type: string, needToKill: boolean) {
         this.id = Fly.count;
@@ -72,17 +73,19 @@ class Fly {
     public die(): void {
         var x = this.div.offsetLeft;
         var y = this.div.offsetTop;
-        // create blood splat div
-        var div = document.createElement("div");
-        div.style.top = y + "px";
-        div.style.left = x + "px";
-        div.style.width = this.width + "px";
-        div.style.height = this.height + "px";
-        div.classList.add("splat");
-        div.classList.add(this.type);
-        div.classList.add("gameStateTemporary");
-        document.body.appendChild(div);
 
+        // create blood splat div
+        if(this.bleeds) {
+            var div = document.createElement("div");
+            div.style.top = y + "px";
+            div.style.left = x + "px";
+            div.style.width = this.width + "px";
+            div.style.height = this.height + "px";
+            div.classList.add("splat");
+            div.classList.add(this.type);
+            div.classList.add("gameStateTemporary");
+            document.body.appendChild(div);
+        }
         // remove the html element
         (<HTMLDivElement>this.div).parentNode.removeChild(this.div); 
         CordovaWrapper.vibrate(150);

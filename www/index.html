@@ -45,7 +45,7 @@
                 <div id="startButton" class="button firstButton">Start</div>
                 <div id="highScoreButton" class="button">High Scores</div>
                 <div id="aboutButton" class="button">About</div>
-                <div class="footerText">Version 0.1.4</div>
+                <div class="footerText">Version 0.1.5</div>
             </div>
         </div>
     </div>
@@ -70,7 +70,7 @@
         </div>
     </div>
     <div class="aboutState">
-        <div class="fullscreen">
+        <div class="fullscreen aboutBackground">
             <div class="header">
                 <div class="columnLeft">
                     <div class="headerButton" onclick="app.OnBack();">
@@ -85,12 +85,12 @@
                 <div class="columnRight"> 
                 </div>
             </div>            
-            <div class="centered">
+            <div class="centered aboutContainer">
+                <div class="aboutHeader">
+                    How Do I Play?
+                </div>
                 <p>
-                    Kill off all the flies to advance to the next level.
-                </p>
-                <p>
-                    Beware, some of them might poison you!
+                    Kill off all the flies to advance to the next level. Some flies have special properties and so may even give you extra lives. But beware, some of them might poison you!
                 </p>
             </div>
         </div>
@@ -114,6 +114,7 @@
     <script src="js/game/utilities.js"></script>
     <script src="js/game/logger.js"></script>
     <script src="js/game/cordovaWrapper.js"></script>
+    <script src="js/game/explosion.js"></script>
 
     <script>
         var app;
