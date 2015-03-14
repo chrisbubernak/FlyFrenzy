@@ -162,7 +162,6 @@ class GameState extends State{
         e.radius = Target.radius();
         GameState.Instance().touchList.push(e);
         GameState.Instance().targets.push(new Target(posx, posy));
-        Logger.Log(posx + " " + posy);
     }
 
     private levelFailedDialog(index: number) {
@@ -310,13 +309,22 @@ class GameState extends State{
 
         // go through all the touches that have happened in the last game frame and check them vs all flies 
         // O(flyCount*touchCount) runtime which isn't ideal...but might be ok for now
+
+        // also go through all explosions and do the same
         var touches = instance.touchList;
+        var explosions = instance.explosions;
         var deadFlies: number = 0;
         for (var f = instance.flies.length - 1; f >= 0; f--) {
             var fly = instance.flies[f];
 
             for (var t = 0; t < touches.length; t++) {
                 if (instance.collides(touches[t], fly)) {
+                    fly.clicked();
+                }
+            }
+
+            for (var e = 0; e < explosions.length; e++) {
+                if (instance.collides(explosions[e], fly)) {
                     fly.clicked();
                 }
             }

@@ -5,6 +5,8 @@ A mobile game written in TypeScript using Cordova framework for Android and Wind
 
 ## Releases
 
+3/14/2015 - Deployed alpha version 15... added exploding flies to the game!
+
 2/18/2015 - Deployed alpha version 14... mostly just some UI fixes to to the menu screens
 
 1/24/2015 - Deployed alpha version 13... added limited number of lifes & golden flies

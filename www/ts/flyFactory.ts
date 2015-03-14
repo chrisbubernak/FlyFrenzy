@@ -7,7 +7,7 @@ class FlyFactory {
 		var flies = [];
 
 		for (var i = 0; i < 8; i++) {
-			flies.push(FlyFactory.CreateExplosiveFly());
+			flies.push(FlyFactory.CreateRegularFly());
 		}
 
 		for (var i = 0; i < Math.floor((level + 1)/ 3); i++) {
@@ -23,6 +23,10 @@ class FlyFactory {
 			flies.push(FlyFactory.CreateBigFly());
 		}
 
+		for (var i = 0; i < (Math.floor((level) / 3)) - 1; i++) {
+			flies.push(FlyFactory.CreateExplosiveFly());
+		}
+
 		if (Math.random() > .9) {
 			flies.push(FlyFactory.CreateGoldFly());
 		}
@@ -34,6 +38,7 @@ class FlyFactory {
         var width = GameState.Instance().maxLeft / 6;
 		var moveSpeed = GameState.Instance().maxLeft / 100;
 		var fly = new Fly(width, moveSpeed, 1, "explosiveFly", true);
+		fly.bleeds = false;
 		return fly;
 	}
 
