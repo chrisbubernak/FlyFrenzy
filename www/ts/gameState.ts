@@ -21,7 +21,6 @@ class GameState extends State{
     private explosions: Explosion[];
     private touchList: any[];
     private remainingToKill: number;
-    private livesDiv: HTMLElement = document.getElementById("livesCounter");
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
     private levelDiv: HTMLElement = document.getElementById("levelCounter");
     private startLives: number = 3;
@@ -250,7 +249,24 @@ class GameState extends State{
     }
 
     private updateLives() {
-        this.livesDiv.innerHTML = this.currentLives.toString();
+        var instance = GameState.Instance();
+        var container = document.getElementById("livesContainer");
+        if (container) {
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+        } else {
+            container = document.createElement("div");
+            container.setAttribute("id", "livesContainer");
+        }
+        for (var l = 0; l < instance.currentLives; l++) {
+            var div = document.createElement("div");
+            div.classList.add("life");
+            div.classList.add("gameStateTemporary");
+            container.appendChild(div);
+        }
+        // append all the divs to the ui in one batch
+        document.body.appendChild(container);
     }
 
     private collides(touchObj, flyObj): boolean {

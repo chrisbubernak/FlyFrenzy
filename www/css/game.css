@@ -264,6 +264,16 @@ html, body {
   z-index: 1;
 }
 
+.life {
+  float: right;
+  margin: .25em;
+  width: 2em;
+  height: 2em;
+  z-index: 2;
+  background-image: url(../img/goldFly.png);
+  background-size: cover;
+}
+
 .fly {
   position: absolute;
   background-image: url(../img/fly.png);
