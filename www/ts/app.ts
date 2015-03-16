@@ -45,6 +45,14 @@ class App implements StateMachine{
 		this.currentState.OnBack(this);
 	}
 
+	public SignOut() {
+		if (this.currentState.StateName() === HomeState.Instance().StateName()) {
+			(<HomeState>this.currentState).SignOut(this);
+		} else {
+			Logger.LogError("Signout was called from outside of HometState");
+		}
+	}
+
 	public GetUserName(): string {
 		return this.userName;
 	}

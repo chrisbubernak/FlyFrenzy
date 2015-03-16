@@ -24,7 +24,6 @@ class GameState extends State{
     private livesDiv: HTMLElement = document.getElementById("livesCounter");
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
     private levelDiv: HTMLElement = document.getElementById("levelCounter");
-    private stateName: string = "gameState";
     private startLives: number = 3;
     private currentLives: number;
     
@@ -39,6 +38,10 @@ class GameState extends State{
     // boolean that we use as a locking mechanism to not show multiple menus
     private canLock: boolean = true; 
 
+    constructor() {
+        super();
+        this.stateName = "gameState";
+    }
 
     public static Instance(): GameState {
         if (typeof GameState.instance === "undefined") {
