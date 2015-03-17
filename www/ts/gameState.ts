@@ -161,7 +161,6 @@ class GameState extends State{
         }
         e.x = posx;
         e.y = posy;
-        Logger.Log(e.x );
         e.radius = Target.radius();
         GameState.Instance().touchList.push(e);
         GameState.Instance().targets.push(new Target(posx, posy));

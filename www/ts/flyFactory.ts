@@ -6,6 +6,23 @@ class FlyFactory {
 	public static CreateFliesForLevel(level: number): Fly[] {
 		var flies = [];
 
+		// special case level.... MINE FIELD
+		if (level === 10) {
+			for (var i = 0; i < 10; i++) {
+				flies.push(FlyFactory.CreatePoisonFly());
+				flies.push(FlyFactory.CreateExplosiveFly());
+			}
+			return flies;
+		}
+
+		// special case level.... THE FAST AND THE FURIOUS
+		if (level === 15) {
+			for (var i = 0; i < 20; i++) {
+				flies.push(FlyFactory.CreateFastFly();
+			}
+			return flies;
+		}
+
 		for (var i = 0; i < 8; i++) {
 			flies.push(FlyFactory.CreateRegularFly());
 		}
