@@ -4,6 +4,9 @@
 /// <reference path="cordovaWrapper.ts"/>
 
 class App implements StateMachine{
+	private appVersion: string = "0.1.5";
+	private apiVersion: string = "v1";
+
 	currentState: State;
 	private userName: string;
 	private clientGuid: string;
@@ -67,5 +70,12 @@ class App implements StateMachine{
 
 	public SetClientGuid(clientGuid: string): void {
 		this.clientGuid = clientGuid;
+	}
+
+	public GetAppVersion() {
+		return this.appVersion;
+	}
+	public GetAPIVersion() {
+		return this.apiVersion;
 	}
 }

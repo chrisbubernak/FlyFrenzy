@@ -84,6 +84,7 @@ class Fly {
             div.classList.add("splat");
             div.classList.add(this.type);
             div.classList.add("gameStateTemporary");
+            div.onclick = GameState.Instance().handleTouch;
             document.body.appendChild(div);
         }
         // remove the html element

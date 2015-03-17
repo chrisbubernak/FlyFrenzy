@@ -161,6 +161,7 @@ class GameState extends State{
         }
         e.x = posx;
         e.y = posy;
+        Logger.Log(e.x );
         e.radius = Target.radius();
         GameState.Instance().touchList.push(e);
         GameState.Instance().targets.push(new Target(posx, posy));
@@ -294,11 +295,12 @@ class GameState extends State{
 
         var request = new XMLHttpRequest();
         // todo: remove hardcoded url here....also use flyfrenzy.bubernak.com 
-        var url = 'https://flyfrenzy.azure-mobile.net/api/HighScore?' +
+        var url = 'https://flyfrenzy.azure-mobile.net/api/' + this.app.GetAPIVersion() + '?' +
             "level=" + level + 
             "&userName=" + userName +
             "&clientGuid=" + clientGuid +
-            "&scoreGuid=" + scoreGuid;
+            "&scoreGuid=" + scoreGuid + 
+            "&version=" + this.app.GetAppVersion();
         request.open('POST', url, true);
         request.onreadystatechange = function() {
             if(request.readyState === 4 && request.status === 200) {
