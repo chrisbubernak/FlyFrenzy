@@ -2,6 +2,8 @@
 /// <reference path="cordovaWrapper.ts"/>
 
 class Fly {
+    private static ANGLE_CHANGE: number = 2;
+
     static count: number = 0;
     id: number;
     type: string;
@@ -14,6 +16,7 @@ class Fly {
     angle: number;
     needToKill: boolean; // do we need to kill this fly to beat the level?
     bleeds: boolean = true;
+    signOfAngleChange: number = 1;
 
     constructor(width: number, moveSpeed: number, totalHealth: number, type: string, needToKill: boolean) {
         this.id = Fly.count;
@@ -45,10 +48,13 @@ class Fly {
         var maxTop = GameState.Instance().maxTop - height;
 
 
-        if (this.angle === undefined || Math.random() >= .90) {
+        if (this.angle === undefined){//} || Math.random() >= .90) {
             this.angle = Math.random() * 2 * Math.PI;
         }
-
+        if (Math.random() >= .9 ) {
+            this.signOfAngleChange = Math.random() <= .9 ? this.signOfAngleChange : -this.signOfAngleChange;
+            this.angle += Math.random() * Fly.ANGLE_CHANGE * this.signOfAngleChange;
+        }
         var xChange = Math.cos(this.angle) * this.moveSpeed;
         var yChange = Math.sin(this.angle) * this.moveSpeed;
 

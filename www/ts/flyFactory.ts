@@ -18,7 +18,7 @@ class FlyFactory {
 		// special case level.... THE FAST AND THE FURIOUS
 		if (level === 15) {
 			for (var i = 0; i < 20; i++) {
-				flies.push(FlyFactory.CreateFastFly();
+				flies.push(FlyFactory.CreateFastFly());
 			}
 			return flies;
 		}
