@@ -4,7 +4,7 @@
 /// <reference path="cordovaWrapper.ts"/>
 
 class App implements StateMachine{
-	private appVersion: string = "0.1.5";
+	private appVersion: string = "0.1.6";
 	private apiVersion: string = "v1";
 
 	currentState: State;
