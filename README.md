@@ -5,6 +5,8 @@ A mobile game written in TypeScript using Cordova framework for Android and Wind
 
 ## Releases
 
+3/21/2015 - Deployed alpha version 16... fixed some small issues
+
 3/14/2015 - Deployed alpha version 15... added exploding flies to the game!
 
 2/18/2015 - Deployed alpha version 14... mostly just some UI fixes to to the menu screens
@@ -14,8 +16,6 @@ A mobile game written in TypeScript using Cordova framework for Android and Wind
 12/29/2014 - Deployed alpha version 11... added usernames (no password for now) and global high scores
 
 12/10/2014 - Deployed alpha version 10...small bug fixes + visual feedback for location of user clicks
-
-12/5/2014 - Deployed alpha version 0.0.0.9 to the Google Play & Windows Phone Store (added different types of flies)
 
 ## Setup
 
