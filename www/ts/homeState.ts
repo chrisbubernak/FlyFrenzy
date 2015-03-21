@@ -9,8 +9,12 @@
 
 class HomeState extends State {
 	private static instance: HomeState;
-    private stateName: string = "homeState"; 
     private userName: string;
+
+    constructor() {
+        super();
+        this.stateName = "homeState";
+    }
 
     public static Instance(): HomeState {
         if (typeof HomeState.instance === "undefined") {
@@ -94,6 +98,13 @@ class HomeState extends State {
         instance.removeEventHandler('startButton');
         instance.removeEventHandler('highScoreButton');
         instance.removeEventHandler('aboutButton');
+    }
+
+    public SignOut(app: App) {
+        // clear everything then change state back to home to get the prompt to sign in
+        localStorage.removeItem("userName");
+        app.SetUserName(undefined);
+        app.ChangeState(HomeState.Instance());
     }
 
     // instead of removing the event handlers just clone the div

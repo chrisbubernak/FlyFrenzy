@@ -2,6 +2,8 @@
 /// <reference path="logger.ts"/>
 
 class State {
+	protected stateName: string = "state";
+
 	public static Instance(): State {
 		Logger.LogError("Instance() not implemented");
 		return new State();
@@ -29,5 +31,9 @@ class State {
 
 	public OnBack(stateMachine: StateMachine): void {
 		Logger.LogError("OnBack() not implemented");
+	}
+
+	public StateName(): string {
+		return this.stateName;
 	}
 }

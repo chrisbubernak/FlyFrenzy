@@ -21,10 +21,8 @@ class GameState extends State{
     private explosions: Explosion[];
     private touchList: any[];
     private remainingToKill: number;
-    private livesDiv: HTMLElement = document.getElementById("livesCounter");
     private timeDiv: HTMLElement = document.getElementById("timeCounter");
     private levelDiv: HTMLElement = document.getElementById("levelCounter");
-    private stateName: string = "gameState";
     private startLives: number = 3;
     private currentLives: number;
     
@@ -39,6 +37,10 @@ class GameState extends State{
     // boolean that we use as a locking mechanism to not show multiple menus
     private canLock: boolean = true; 
 
+    constructor() {
+        super();
+        this.stateName = "gameState";
+    }
 
     public static Instance(): GameState {
         if (typeof GameState.instance === "undefined") {
@@ -247,7 +249,24 @@ class GameState extends State{
     }
 
     private updateLives() {
-        this.livesDiv.innerHTML = this.currentLives.toString();
+        var instance = GameState.Instance();
+        var container = document.getElementById("livesContainer");
+        if (container) {
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+        } else {
+            container = document.createElement("div");
+            container.setAttribute("id", "livesContainer");
+        }
+        for (var l = 0; l < instance.currentLives; l++) {
+            var div = document.createElement("div");
+            div.classList.add("life");
+            div.classList.add("gameStateTemporary");
+            container.appendChild(div);
+        }
+        // append all the divs to the ui in one batch
+        document.body.appendChild(container);
     }
 
     private collides(touchObj, flyObj): boolean {
@@ -275,11 +294,12 @@ class GameState extends State{
 
         var request = new XMLHttpRequest();
         // todo: remove hardcoded url here....also use flyfrenzy.bubernak.com 
-        var url = 'https://flyfrenzy.azure-mobile.net/api/HighScore?' +
+        var url = 'https://flyfrenzy.azure-mobile.net/api/' + this.app.GetAPIVersion() + '?' +
             "level=" + level + 
             "&userName=" + userName +
             "&clientGuid=" + clientGuid +
-            "&scoreGuid=" + scoreGuid;
+            "&scoreGuid=" + scoreGuid + 
+            "&version=" + this.app.GetAppVersion();
         request.open('POST', url, true);
         request.onreadystatechange = function() {
             if(request.readyState === 4 && request.status === 200) {

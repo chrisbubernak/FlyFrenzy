@@ -149,12 +149,12 @@ html, body {
  }
 
  .columnLeft {
-  width: 25%;
+  width: 30%;
   display: inline-block;
  }
 
  .columnMid {
-  width: 50%;
+  width: 40%;
   display: inline-block;
  }
 
@@ -262,6 +262,16 @@ html, body {
 .explosion {
   position: absolute;
   z-index: 1;
+}
+
+.life {
+  float: right;
+  margin: .25em;
+  width: 2em;
+  height: 2em;
+  z-index: 2;
+  background-image: url(../img/goldFly.png);
+  background-size: cover;
 }
 
 .fly {

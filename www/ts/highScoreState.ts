@@ -5,9 +5,13 @@
 
 class HighScoreState extends State {
 	private static instance: HighScoreState;
-    private stateName: string = "highScoreState"; 
     private temporaryDivsClass: string = "highScoreStateTemporary";
     private divContainer: string = "highScoresContainer";
+
+    constructor() {
+        super();
+        this.stateName = "highScoreState";
+    }
 
     public static Instance(): HighScoreState {
         if (typeof HighScoreState.instance === "undefined") {

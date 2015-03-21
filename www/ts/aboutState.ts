@@ -4,7 +4,11 @@
 
 class AboutState extends State {
 	private static instance: AboutState;
-    private stateName: string = "aboutState"; 
+
+    constructor() {
+        super();
+        this.stateName = "aboutState";
+    }
 
     public static Instance(): AboutState {
         if (typeof AboutState.instance === "undefined") {

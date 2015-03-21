@@ -4,6 +4,9 @@
 /// <reference path="cordovaWrapper.ts"/>
 
 class App implements StateMachine{
+	private appVersion: string = "0.1.6";
+	private apiVersion: string = "v1";
+
 	currentState: State;
 	private userName: string;
 	private clientGuid: string;
@@ -45,6 +48,14 @@ class App implements StateMachine{
 		this.currentState.OnBack(this);
 	}
 
+	public SignOut() {
+		if (this.currentState.StateName() === HomeState.Instance().StateName()) {
+			(<HomeState>this.currentState).SignOut(this);
+		} else {
+			Logger.LogError("Signout was called from outside of HometState");
+		}
+	}
+
 	public GetUserName(): string {
 		return this.userName;
 	}
@@ -59,5 +70,12 @@ class App implements StateMachine{
 
 	public SetClientGuid(clientGuid: string): void {
 		this.clientGuid = clientGuid;
+	}
+
+	public GetAppVersion() {
+		return this.appVersion;
+	}
+	public GetAPIVersion() {
+		return this.apiVersion;
 	}
 }
