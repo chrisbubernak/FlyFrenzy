@@ -53,6 +53,8 @@ class CordovaWrapper {
 	}
 
 	public static initAds() {
+		return; // disable ads for the time being...
+		
 		if (CordovaWrapper.runningInBrowser) {
 			Logger.LogInfo("INIT ADDS!")
 			return;
