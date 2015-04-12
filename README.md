@@ -4,6 +4,7 @@ FlyFrenzy
 A mobile game written in TypeScript using Cordova framework for Android and Windows Phone. Please contact me if you'd like to get access to the private alpha & beta releases.
 
 ## Releases
+4/12/2015 - Deployed alpha version 17... removed ads, changed some font sizes
 
 3/21/2015 - Deployed alpha version 16... fixed some small issues
 
@@ -15,7 +16,6 @@ A mobile game written in TypeScript using Cordova framework for Android and Wind
 
 12/29/2014 - Deployed alpha version 11... added usernames (no password for now) and global high scores
 
-12/10/2014 - Deployed alpha version 10...small bug fixes + visual feedback for location of user clicks
 
 ## Setup
 
